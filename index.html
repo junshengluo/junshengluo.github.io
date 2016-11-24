@@ -128,11 +128,25 @@
 <li><a href="https://sg.godaddy.com/" target="_blank" rel="external">godaddy</a></li>
 </ul>
 <p>###8,域名解析,讲域名指向github Pages</p>
+<ol>
+<li>在source文件夹中新建一个CNAME文件(无后缀名),然后用文本编辑器打开,在首行添加你的网站域名,如<a href="http://xxxx.com,注意前面没有http://,也没有www" target="_blank" rel="external">http://xxxx.com,注意前面没有http://,也没有www</a>.</li>
+<li><p>在域名解析提供商</p>
+<ul>
+<li>先添加一个CNAME,主机记录写@,后面记录值写上你的<a href="http://xxxx.github.io" target="_blank" rel="external">http://xxxx.github.io</a></li>
+<li>再添加一个CNAME,主机记录写www,后面记录值也是<a href="http://xxxx.github.io" target="_blank" rel="external">http://xxxx.github.io</a></li>
+</ul>
+</li>
+</ol>
+<p>这样别人用www和不用www都能访问你的网站.<br>也可以使用A记录,对应的github page的ip如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@        A        192.30.252.153</div><div class="line">@        A        192.30.252.154</div><div class="line">@        CNAME    username.github.io</div><div class="line">www      CNAME    username.github.io.</div></pre></td></tr></table></figure>
+<ol>
+<li>等1分钟左右,刷新浏览器</li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://junshengluo.com/2016/11/23/如何搭建github-pages-hexo-博客/" data-id="civvmtv850000dsfyf55hq2dp" class="article-share-link">Share</a>
+      <a data-url="http://junshengluo.com/2016/11/23/如何搭建github-pages-hexo-博客/" data-id="civvn6v9m0001erfylgsv95yx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -177,7 +191,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://junshengluo.com/2016/11/23/hello-world/" data-id="civvmrx4j0000dmfylygro6pb" class="article-share-link">Share</a>
+      <a data-url="http://junshengluo.com/2016/11/23/hello-world/" data-id="civvn6v9i0000erfy41gggopt" class="article-share-link">Share</a>
       
       
     </footer>
