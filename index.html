@@ -361,7 +361,7 @@
 <li>我们写的app是怎么被安装到系统上的?我们点击app的图标时又发生了什么?</li>
 <li>等等…</li>
 </ol>
-<p>我们先看一个大概的流程图,然后带着我的问题逐一去理解整个Android OS启动流程<br><img src="https://avatars3.githubusercontent.com/u/10328555?v=3&amp;s=460" alt=""></p>
+<p>我们先看一个大概的流程图,然后带着我的问题逐一去理解整个Android OS启动流程:<br>图有几个细节没画好…<br><img src="https://avatars3.githubusercontent.com/u/10328555?v=3&amp;s=460" alt=""></p>
 <p>####第一步:启动电源以及系统启动<br>当我们按下电源后,引导芯片代码执行,然后加载<strong>引导程序</strong>到RAM执行.</p>
 <p>//TODO 这里面涉及到的BIOS/MBR等知识,不做探究,</p>
 <p>####第二步:Boot Loeader引导程序<br>在硬盘上第0磁道第一个扇区被称为MBR,即主引导记录,存放预启动信息以及分区表信息<br>Boot Loeader就是,系统找到MBR后会将其复制到特定地址的物理内存中,物理内存上的内容就是 Boot Loeader;<br>Boot Loeader的作用:检测外部的RAM以及加载一些有用的程序,设置网络、内存,初始化硬件(主板、键盘…)等,主要一点就是根据Boot Loeader内部的配置信息,找到内核镜像,然后将内核加载到内存.</p>
