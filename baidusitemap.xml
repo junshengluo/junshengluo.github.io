@@ -4,6 +4,24 @@
 
     
   <url>
+    <loc>http://junshengluo.com/2016/11/23/wordpress-%E5%A6%82%E4%BD%95%E8%AE%A9wordpress%E6%94%AF%E6%8C%81%E4%BB%A3%E7%A0%81%E7%BC%A9%E8%BF%9B%E5%92%8C%E9%AB%98%E4%BA%AE/</loc>
+    <lastmod>2016-11-25T06:14:34.000Z</lastmod>
+    <data>
+        <display>
+        <title>如何让wordpress支持代码缩进和高亮</title>
+        <pubTime>2016-11-23T02:10:20.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="wordpress" url="http://junshengluo.com/categories/wordpress/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://junshengluo.com/2016/11/23/hexo-%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BAgithub-pages-hexo-%E5%8D%9A%E5%AE%A2/</loc>
     <lastmod>2016-11-25T05:41:13.000Z</lastmod>
     <data>
@@ -69,24 +87,6 @@
            
              
               <breadCrumb title="hexo" url="http://junshengluo.com/categories/hexo/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://junshengluo.com/2016/11/23/wordpress-%E5%A6%82%E4%BD%95%E8%AE%A9wordpress%E6%94%AF%E6%8C%81%E4%BB%A3%E7%A0%81%E7%BC%A9%E8%BF%9B%E5%92%8C%E9%AB%98%E4%BA%AE/</loc>
-    <lastmod>2016-11-25T05:34:11.000Z</lastmod>
-    <data>
-        <display>
-        <title>如何让wordpress支持代码缩进和高亮</title>
-        <pubTime>2016-11-23T02:10:20.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="wordpress" url="http://junshengluo.com/categories/wordpress/"/>
           
         </display>
     </data>
