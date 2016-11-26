@@ -102,9 +102,10 @@
 
 下面我们就探究一下各种logo及动画出现的时机和展现原理。
 二，关于开机画面由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机">
+<meta property="og:image" content="http://oh6ghytzv.bkt.clouddn.com/%E5%BC%80%E6%9C%BA%E7%94%BB%E9%9D%A2%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
 <meta property="og:image" content="http://oh6ghytzv.bkt.clouddn.com/android-logo-mask.png">
 <meta property="og:image" content="http://oh6ghytzv.bkt.clouddn.com/android-logo-shine.png">
-<meta property="og:updated_time" content="2016-11-26T10:35:15.000Z">
+<meta property="og:updated_time" content="2016-11-26T10:49:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="探究 Android 开机画面">
 <meta name="twitter:description" content="探究 Android 开机画面一，前言我们在前文探究Android OS 启动流程中曾有遗留问题
@@ -113,7 +114,7 @@
 
 下面我们就探究一下各种logo及动画出现的时机和展现原理。
 二，关于开机画面由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机">
-<meta name="twitter:image" content="http://oh6ghytzv.bkt.clouddn.com/android-logo-mask.png">
+<meta name="twitter:image" content="http://oh6ghytzv.bkt.clouddn.com/%E5%BC%80%E6%9C%BA%E7%94%BB%E9%9D%A2%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
 
 
 
@@ -413,7 +414,7 @@
 <p>我们依次在屏幕上看到的各种logo、动画是什么?那个阶段现实的？</p>
 </blockquote>
 <p>下面我们就探究一下各种logo及动画出现的时机和展现原理。</p>
-<h3 id="二，关于开机画面"><a href="#二，关于开机画面" class="headerlink" title="二，关于开机画面"></a>二，关于开机画面</h3><p>由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机Nexus 4上我们并没有看到传说中的小企鹅画面。由于技术限制每层探究到Linux Kernel层面，所以对于Linux内核层面的动画我们只是简单地说一下流程，方便理解以及过渡到我们Android层面的开机动画。<br>我们先用一张图说一下开机画面的流程:<br><a href="">android 开机动画</a></p>
+<h3 id="二，关于开机画面"><a href="#二，关于开机画面" class="headerlink" title="二，关于开机画面"></a>二，关于开机画面</h3><p>由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机Nexus 4上我们并没有看到传说中的小企鹅画面。由于技术限制每层探究到Linux Kernel层面，所以对于Linux内核层面的动画我们只是简单地说一下流程，方便理解以及过渡到我们Android层面的开机动画。<br>我们先用一张图说一下开机画面的流程:<br><img src="http://oh6ghytzv.bkt.clouddn.com/%E5%BC%80%E6%9C%BA%E7%94%BB%E9%9D%A2%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="android 开机动画"></p>
 <h3 id="二，关于开机画面第一层动画"><a href="#二，关于开机画面第一层动画" class="headerlink" title="二，关于开机画面第一层动画"></a>二，关于开机画面第一层动画</h3><blockquote>
 <p>//TODO 有序研究到这层会补充完成</p>
 </blockquote>
@@ -467,13 +468,13 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">bool</span> BootAnimation::movie()</div><div class="line">&#123;</div><div class="line">	....</div><div class="line">	<span class="comment">//NOTE(ljs):OpenGL相关不作分析...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>我们看一下到底bootanimation.zip文件是个什么样的文件。我已将把miui和优朋普乐的开机动画文件传至github。<br><a href="https://github.com/junshengluo/bootanimation" target="_blank" rel="external">github-bootanimation</a></p>
 <p>我们解压miui的会看到如下文件</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">|--bootanimation</div><div class="line">		|--part0</div><div class="line">			|<span class="number">-01.</span>png</div><div class="line">			|<span class="number">-02.</span>png</div><div class="line">			|<span class="number">-03.</span>png</div><div class="line">			|<span class="number">-04.</span>png</div><div class="line">			|<span class="number">-05.</span>png</div><div class="line">		|--desc.txt</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">|--bootanimation</div><div class="line">	|--part0</div><div class="line">		|<span class="number">-01.</span>png</div><div class="line">		|<span class="number">-02.</span>png</div><div class="line">		|<span class="number">-03.</span>png</div><div class="line">		|<span class="number">-04.</span>png</div><div class="line">		|<span class="number">-05.</span>png</div><div class="line">	|--desc.txt</div></pre></td></tr></table></figure>
 <p>当看到01-05.png的时候，我想大家就明白了，原来我们看到的动画是这5张图片的帧动画。<br>而对于desc.txt 文件我们看一下内容:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">1080</span> <span class="number">1920</span> <span class="number">5</span></div><div class="line">p <span class="number">0</span> <span class="number">5</span> part0</div></pre></td></tr></table></figure>
 <p>对于这个描述文件我组一下说明:</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">1080</span> <span class="number">1920</span> <span class="number">5</span> ----这里的<span class="number">1080</span>代表图片的像素（大小）宽度，<span class="number">1920</span>代表图片的像素（大小）高度，<span class="number">5</span>代表帧数，也就是图片一共多少张</div><div class="line">p <span class="number">1</span> <span class="number">0</span> part0 ---这里的p代表标志符，<span class="number">1</span>代表循环次数为<span class="number">1</span>次，<span class="number">0</span>代表阶段间隔时间为<span class="number">0</span>,part0代表对应的文件夹名</div></pre></td></tr></table></figure>
 <p>对应voole的bootanimation.zip文件解压如下:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">|--bootanimation</div><div class="line">		|--part0</div><div class="line">			|<span class="number">-01.</span>png</div><div class="line">		|--part1</div><div class="line">			|<span class="number">-01.</span>png</div><div class="line">			|<span class="number">-02.</span>png</div><div class="line">			|<span class="number">-03.</span>png</div><div class="line">			|<span class="number">-04.</span>png</div><div class="line">			|<span class="number">-05.</span>png</div><div class="line">		|--desc.txt</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">|--bootanimation</div><div class="line">	|--part0</div><div class="line">		|<span class="number">-01.</span>png</div><div class="line">	|--part1</div><div class="line">		|<span class="number">-01.</span>png</div><div class="line">		|<span class="number">-02.</span>png</div><div class="line">		|<span class="number">-03.</span>png</div><div class="line">		|<span class="number">-04.</span>png</div><div class="line">		|<span class="number">-05.</span>png</div><div class="line">	|--desc.txt</div></pre></td></tr></table></figure>
 <p>desc.txt描述如下:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1280 720 3</div><div class="line">p 1 0 part0</div><div class="line">p 5 0 part1</div></pre></td></tr></table></figure>
 <p>如此我们看到这个bootanimation.zip帧动画的实现的灵活性。</p>
