@@ -92,7 +92,7 @@
 <meta property="og:url" content="http://junshengluo.com/2016/11/26/探究 init.rc 脚本/index.html">
 <meta property="og:site_name" content="luojunsheng's blog">
 <meta property="og:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
-<meta property="og:updated_time" content="2016-11-26T06:16:58.000Z">
+<meta property="og:updated_time" content="2016-11-26T06:24:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="探究 init.rc 脚本">
 <meta name="twitter:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
@@ -504,8 +504,6 @@
 </table>
 <h4 id="3-3-Services"><a href="#3-3-Services" class="headerlink" title="3.3:Services:"></a>3.3:Services:</h4><p>服务是指那些需要在系统初始化时就启动或退出时自动重启的程序。<br>它的语法结构如下所示:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">service &lt;name&gt; &lt;pathname&gt; [ &lt;argument&gt; ]*  </div><div class="line">  &lt;option&gt;  </div><div class="line">  &lt;option&gt;  </div><div class="line">  ...</div></pre></td></tr></table></figure>
-<p>我们重点分一下zygote的语法:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server</div><div class="line">    class main</div><div class="line">    socket zygote stream 660 root system</div><div class="line">    onrestart write /sys/android_power/request_state wake</div><div class="line">    onrestart write /sys/power/state on</div><div class="line">    onrestart restart media</div><div class="line">    onrestart restart netd</div></pre></td></tr></table></figure>
 <h4 id="3-4-Options"><a href="#3-4-Options" class="headerlink" title="3.4:Options"></a>3.4:Options</h4><p>Options:用来修改服务的;它们影响如何及何时运行这个服务</p>
 <table>
 <thead>
@@ -536,12 +534,19 @@
 <td>在执行此服务之前先切换用户名。当前默认为root.</td>
 </tr>
 <tr>
-<td>group &lt;groupname&gt; [ &lt;groupname&gt; ]*</td>
-<td>类似于user,切换组名</td>
+<td>oneshot</td>
+<td>当此服务退出时不会自动重启.</td>
+</tr>
+<tr>
+<td>class &lt;name&gt;</td>
+<td>给服务指定一个类属。这样方便操作多个服务同时启动或停止。默认情况下为default。</td>
+</tr>
+<tr>
+<td>onrestart</td>
+<td>当服务重启时执行一条指令</td>
 </tr>
 </tbody>
 </table>
-<p>oneshot 当此服务退出时不会自动重启.<br>class &lt;name&gt;|给服务指定一个类属。这样方便操作多个服务同时启动或停止。默认情况下为default。<br>onrestart|当服务重启时执行一条指令</p>
 <h4 id="3-5-trigger"><a href="#3-5-trigger" class="headerlink" title="3.5:trigger"></a>3.5:trigger</h4><p>trigger:触发器,或者叫做触发条件</p>
 <table>
 <thead>
