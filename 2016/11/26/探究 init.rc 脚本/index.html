@@ -92,7 +92,7 @@
 <meta property="og:url" content="http://junshengluo.com/2016/11/26/探究 init.rc 脚本/index.html">
 <meta property="og:site_name" content="luojunsheng's blog">
 <meta property="og:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
-<meta property="og:updated_time" content="2016-11-26T05:55:36.000Z">
+<meta property="og:updated_time" content="2016-11-26T06:06:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="探究 init.rc 脚本">
 <meta name="twitter:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
@@ -425,79 +425,79 @@
 </thead>
 <tbody>
 <tr>
-<td>chmod \<octal-mode> \<path></path></octal-mode></td>
+<td>chmod &lt;octal-mode&gt; &lt;path&gt;</td>
 <td>改变指定文件的读取权限</td>
 </tr>
 <tr>
-<td>chown \<owner> \<group> \<path></path></group></owner></td>
+<td>chown &lt;owner&gt; &lt;group&gt; &lt;path&gt;</td>
 <td>改变指定文件的拥有都和组名的属性</td>
 </tr>
 <tr>
-<td>chroot \<directory></directory></td>
+<td>chroot &lt;directory&gt;</td>
 <td>改变进行的根目录</td>
 </tr>
 <tr>
-<td>class_start \<serviceclass></serviceclass></td>
+<td>class_start &lt;serviceclass&gt;</td>
 <td>启动指定类属的所有服务，如果服务已经启动，则不再重复启动</td>
 </tr>
 <tr>
-<td>class_stop \<serviceclass></serviceclass></td>
+<td>class_stop &lt;serviceclass&gt;</td>
 <td>停止指定类属的所胡服务</td>
 </tr>
 <tr>
-<td>domainname \<name></name></td>
+<td>domainname &lt;name&gt;</td>
 <td>设置域名</td>
 </tr>
 <tr>
-<td>export \<name> \<value></value></name></td>
+<td>export &lt;name&gt; &lt;value&gt;</td>
 <td>设置全局环境参数，此参数被设置后对所有进程都有效</td>
 </tr>
 <tr>
-<td>exec \<path></path> [ \<argument> ]*</argument></td>
+<td>exec &lt;path&gt; [ &lt;argument&gt; ]*</td>
 <td>执行指定路径下的程序，并传递参数</td>
 </tr>
 <tr>
-<td>hostname \<name></name></td>
+<td>hostname &lt;name&gt;</td>
 <td>设置主机名</td>
 </tr>
 <tr>
-<td>ifup \<interface></interface></td>
+<td>ifup &lt;interface&gt;</td>
 <td>使指定的网络接口”上线”，相当激活指定的网络接口</td>
 </tr>
 <tr>
-<td>import \<filename></filename></td>
+<td>import &lt;filename&gt;</td>
 <td>导入一个额外的init配置文件</td>
 </tr>
 <tr>
-<td>insmod \<path></path></td>
+<td>insmod &lt;path&gt;</td>
 <td>安装模块到指定路径</td>
 </tr>
 <tr>
-<td>mkdir \<path></path> [mode] [owner] [group]</td>
+<td>mkdir &lt;path&gt; [mode] [owner] [group]</td>
 <td>用指定参数创建一个目录，在默认情况下，创建的目录读取权限为755，用户名为root，组名为root</td>
 </tr>
 <tr>
-<td>mount \<type> \<device> \<dir> [ \<mountoption> ]*</mountoption></dir></device></type></td>
+<td>mount &lt;type&gt; &lt;device&gt; &lt;dir&gt; [ &lt;mountoption&gt; ]*</td>
 <td>类似于linux的mount指令</td>
 </tr>
 <tr>
-<td>start \<service></service></td>
+<td>start &lt;service&gt;</td>
 <td>如果指定的服务未启动，则启动它 </td>
 </tr>
 <tr>
-<td>stop \<service></service></td>
+<td>stop &lt;service&gt;</td>
 <td>如果指定的服务当前正在运行，则停止它 </td>
 </tr>
 <tr>
-<td>setprop \<name> <value></value></name></td>
+<td>setprop &lt;name&gt; &lt;value&gt;</td>
 <td>设置属性及对应的值</td>
 </tr>
 <tr>
-<td>trigger \<event></event></td>
+<td>trigger &lt;event&gt;</td>
 <td>触发器</td>
 </tr>
 <tr>
-<td>write \<path></path> \<string> [ \<string> ]*</string></string></td>
+<td>write &lt;path&gt; &lt;string&gt; [ &lt;string&gt; ]*</td>
 <td>往指定的文件写字符串</td>
 </tr>
 </tbody>
