@@ -1,0 +1,1101 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="android,Framework,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="luojunsheng's blog" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="探究 Android 开机画面一，前言我们在前文探究Android OS 启动流程中曾有遗留问题
+
+我们依次在屏幕上看到的各种logo、动画是什么?那个阶段现实的？
+
+下面我们就探究一下各种logo及动画出现的时机和展现原理。
+二，关于开机画面由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探究 Android 开机画面">
+<meta property="og:url" content="http://junshengluo.com/2016/11/26/探究 init.rc 脚本副本/index.html">
+<meta property="og:site_name" content="luojunsheng's blog">
+<meta property="og:description" content="探究 Android 开机画面一，前言我们在前文探究Android OS 启动流程中曾有遗留问题
+
+我们依次在屏幕上看到的各种logo、动画是什么?那个阶段现实的？
+
+下面我们就探究一下各种logo及动画出现的时机和展现原理。
+二，关于开机画面由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机">
+<meta property="og:image" content="http://oh6ghytzv.bkt.clouddn.com/android-logo-mask.png">
+<meta property="og:image" content="http://oh6ghytzv.bkt.clouddn.com/android-logo-shine.png">
+<meta property="og:updated_time" content="2016-11-26T10:35:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="探究 Android 开机画面">
+<meta name="twitter:description" content="探究 Android 开机画面一，前言我们在前文探究Android OS 启动流程中曾有遗留问题
+
+我们依次在屏幕上看到的各种logo、动画是什么?那个阶段现实的？
+
+下面我们就探究一下各种logo及动画出现的时机和展现原理。
+二，关于开机画面由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机">
+<meta name="twitter:image" content="http://oh6ghytzv.bkt.clouddn.com/android-logo-mask.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://junshengluo.com/2016/11/26/探究 init.rc 脚本副本/">
+
+
+
+
+
+  <title> 探究 Android 开机画面 | luojunsheng's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">luojunsheng's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">android/......</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/11/26/探究 init.rc 脚本副本/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="luojunsheng">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars3.githubusercontent.com/u/10328555?v=3&s=460">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="luojunsheng's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none" itemprop="url image" alt="luojunsheng's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                探究 Android 开机画面
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-26T16:45:00+08:00">
+                2016-11-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/11/26/探究 init.rc 脚本副本/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/26/探究 init.rc 脚本副本/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/26/探究 init.rc 脚本副本/" class="leancloud_visitors" data-flag-title="探究 Android 开机画面">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="探究-Android-开机画面"><a href="#探究-Android-开机画面" class="headerlink" title="探究 Android 开机画面"></a>探究 Android 开机画面</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>我们在前文<a href="http://junshengluo.com/2016/11/24/%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">探究Android OS 启动流程</a>中曾有遗留问题</p>
+<blockquote>
+<p>我们依次在屏幕上看到的各种logo、动画是什么?那个阶段现实的？</p>
+</blockquote>
+<p>下面我们就探究一下各种logo及动画出现的时机和展现原理。</p>
+<h3 id="二，关于开机画面"><a href="#二，关于开机画面" class="headerlink" title="二，关于开机画面"></a>二，关于开机画面</h3><p>由于Android是基于Linux 2.6版本的，所以在整个Android OS启动过程中，理论上会涉及到Linux内核的启动画面与静态画面，然后在原生真机Nexus 4上我们并没有看到传说中的小企鹅画面。由于技术限制每层探究到Linux Kernel层面，所以对于Linux内核层面的动画我们只是简单地说一下流程，方便理解以及过渡到我们Android层面的开机动画。<br>我们先用一张图说一下开机画面的流程:<br><a href="">android 开机动画</a></p>
+<h3 id="二，关于开机画面第一层动画"><a href="#二，关于开机画面第一层动画" class="headerlink" title="二，关于开机画面第一层动画"></a>二，关于开机画面第一层动画</h3><blockquote>
+<p>//TODO 有序研究到这层会补充完成</p>
+</blockquote>
+<h3 id="二，关于开机画面第二层动画"><a href="#二，关于开机画面第二层动画" class="headerlink" title="二，关于开机画面第二层动画"></a>二，关于开机画面第二层动画</h3><blockquote>
+<p>//TODO 有序研究到这层会补充完成</p>
+</blockquote>
+<h3 id="二，关于开机画面第三层动画"><a href="#二，关于开机画面第三层动画" class="headerlink" title="二，关于开机画面第三层动画"></a>二，关于开机画面第三层动画</h3><p>下面我们来说说开机画面第三层动画，在源码涉及到的类有如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./system/core/init/init.h</div><div class="line">./system/core/init/init.c</div></pre></td></tr></table></figure>
+<p>从上面涉及到的类我们就明白，这个画面应该是Init进程启动过程中出现的静态画面。<br>我们记得在ini.c的main()函数中利用函数queue_builtin_action()，向<br>init进程中的一个待执行队列(触发器为early-init)增加了一个名称等于”console_init”的action，这个action对应的执行函数为console_init_action(),它就是用来显示android层第二个开机画面的。<br>我们先看一下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></div><div class="line">&#123;   ....</div><div class="line">    init_parse_config_file(<span class="string">"/init.rc"</span>);</div><div class="line"></div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):执行rc文件中触发器为 on early-init的语句</span></div><div class="line">    action_for_each_trigger(<span class="string">"early-init"</span>, action_add_queue_tail);</div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):向init进程中的一个待执行action队列增加了一个名称等于"console_init"的action</span></div><div class="line">    <span class="comment">//NOTE(ljs):这个action对应的执行函数为console_init_action,它就是用来显示android层第二个开机画面的</span></div><div class="line">    queue_builtin_action(console_init_action, <span class="string">"console_init"</span>);</div><div class="line">    ...</div><div class="line">    <span class="comment">//NOTE(ljs):执行rc文件中触发器为 on init的语句</span></div><div class="line">    action_for_each_trigger(<span class="string">"init"</span>, action_add_queue_tail);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面我们看一下action的执行函数console_init_action()</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">console_init_action</span><span class="params">(<span class="keyword">int</span> nargs, <span class="keyword">char</span> **args)</span></span></div><div class="line">&#123;</div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):加载文件/initlogo.rle,若调用失败,将会显示文字的"ANDROID"logo</span></div><div class="line">    <span class="keyword">if</span>( load_565rle_image(INIT_IMAGE_FILE) ) &#123;</div><div class="line">        fd = open(<span class="string">"/dev/tty0"</span>, O_WRONLY);</div><div class="line">        <span class="keyword">if</span> (fd &gt;= <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">const</span> <span class="keyword">char</span> *msg;</div><div class="line">               msg = <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span>  <span class="comment">// console is 40 cols x 30 lines</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"\n"</span></div><div class="line">            <span class="string">"             A N D R O I D "</span>;</div><div class="line">            write(fd, msg, <span class="built_in">strlen</span>(msg));</div><div class="line">            close(fd);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>关于宏命令INIT_IMAGE_FILE定义在:</p>
+<blockquote>
+<p>./system/core/init/init.h</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> INIT_IMAGE_FILE	<span class="meta-string">"/initlogo.rle"</span></span></div></pre></td></tr></table></figure>
+<p>也就是说Android层面的第二个开机画面的内容是由文件/initlogo.rle来指定的。如果文件/initlogo.rle不存在，或者在显示它的过程中出现异常，那么函数<strong>load_565rle_image()</strong>的返回值就会等于-1，这时候函数<strong>console_init_action()</strong>就以文本的方式来显示第二个开机画面，即向编号为0的控制台（/dev/tty0）输出“ANDROID”这7个字符。</p>
+<blockquote>
+<p>NOTE/TODO:很不幸的是，依然没有看到这个画面（Nexus 4上/v4.4.2）.</p>
+<h3 id="二，关于开机画面第四层动画"><a href="#二，关于开机画面第四层动画" class="headerlink" title="二，关于开机画面第四层动画"></a>二，关于开机画面第四层动画</h3><h4 id="2-1-开机画面第四层动画的流程"><a href="#2-1-开机画面第四层动画的流程" class="headerlink" title="2.1 开机画面第四层动画的流程"></a>2.1 开机画面第四层动画的流程</h4><p>这层的画面，我相信很多人很熟悉了，是由bootanimation服务通过OpenGL来渲染画面。<br>涉及到的主要源码文件如下:</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">./frameworks/base/cmds/bootanimation/BootAnimation.cpp</div><div class="line">./frameworks/base/cmds/bootanimation/bootanimation_main.cpp</div><div class="line">./frameworks/base/cmds/bootanimation/BootAnimation.h</div></pre></td></tr></table></figure>
+<p>我们知道在Android OS启动的时候会启动SurfaceFlinger服务，关于SurfaceFlinger服务，请阅读罗升阳老师的<a href="http://blog.csdn.net/luoshengyang/article/details/8022957" target="_blank" rel="external">Android系统Surface机制的SurfaceFlinger服务的启动过程分析</a>，在SurfaceFlinger启动后，在SurfaceFlinger::init()函数中</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> SurfaceFlinger::init() &#123;</div><div class="line">    ...</div><div class="line"></div><div class="line">    <span class="comment">// start boot animation</span></div><div class="line">    <span class="comment">//NOTE(ljs):SurfaceFlinger::init() –&gt; startBootAnim()-&gt;property_set("ctl.start", "bootanim");</span></div><div class="line">    startBootAnim();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看一下startBootAnim()函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">void</span> SurfaceFlinger::startBootAnim() &#123;</div><div class="line">    <span class="comment">// start boot animation</span></div><div class="line">    property_set(<span class="string">"service.bootanim.exit"</span>, <span class="string">"0"</span>);</div><div class="line">    property_set(<span class="string">"ctl.start"</span>, <span class="string">"bootanim"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们看懂通过利用属性服务来启动开机动画服务bootanim，属性”ctl.start”和” ctl.stop”是用来启动和停止服务的.</p>
+<p>bootanim服务定义在init.rc中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">service bootanim /system/bin/bootanimation</div><div class="line">    class main</div><div class="line">    user graphics</div><div class="line">    group graphics</div><div class="line">    disabled</div><div class="line">    oneshot</div></pre></td></tr></table></figure>
+<p>启动bootanimation进程，该进程的源码对应bootanimation_main.cpp，我们看一下主要代码:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></div><div class="line">&#123;</div><div class="line">    ....   </div><div class="line">    <span class="comment">// create the boot animation object</span></div><div class="line">    sp&lt;BootAnimation&gt; boot = <span class="keyword">new</span> BootAnimation();</div><div class="line">    ....</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后我们看一下BootAnimation的构造</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//NOTE(lsj):在构造函数中初始化mShutdown = false;表示默认是开机标志</span></div><div class="line">BootAnimation::BootAnimation() : Thread(<span class="literal">false</span>)</div><div class="line">&#123;	</div><div class="line">	 <span class="comment">//TODO(ljs):???什么鬼？以后研究</span></div><div class="line">    mSession = <span class="keyword">new</span> SurfaceComposerClient();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后我们在readyToRun()函数中看到了对于开机动画问题的判断</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> USER_BOOTANIMATION_FILE <span class="meta-string">"/data/local/bootanimation.zip"</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SYSTEM_BOOTANIMATION_FILE <span class="meta-string">"/system/media/bootanimation.zip"</span></span></div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">status_t</span> BootAnimation::readyToRun() &#123;</div><div class="line">    ....</div><div class="line">    <span class="comment">//是否显示开机动画</span></div><div class="line">    mAndroidAnimation = <span class="literal">true</span>;</div><div class="line"></div><div class="line">    <span class="comment">// If the device has encryption turned on or is in process </span></div><div class="line">    <span class="comment">// of being encrypted we show the encrypted boot animation.</span></div><div class="line">    <span class="keyword">char</span> decrypt[PROPERTY_VALUE_MAX];</div><div class="line">    property_get(<span class="string">"vold.decrypt"</span>, decrypt, <span class="string">""</span>);</div><div class="line"></div><div class="line">    <span class="keyword">bool</span> encryptedAnimation = atoi(decrypt) != <span class="number">0</span> || !<span class="built_in">strcmp</span>(<span class="string">"trigger_restart_min_framework"</span>, decrypt);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> ((encryptedAnimation &amp;&amp;</div><div class="line">            (access(SYSTEM_ENCRYPTED_BOOTANIMATION_FILE, R_OK) == <span class="number">0</span>) &amp;&amp;</div><div class="line">            (mZip.open(SYSTEM_ENCRYPTED_BOOTANIMATION_FILE) == NO_ERROR))||...) &#123;</div><div class="line">        mAndroidAnimation = <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> NO_ERROR;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>主要是通过判断文件是否存在等逻辑来决定是否显示动画。真正的开始阶段如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">bool</span> BootAnimation::threadLoop()</div><div class="line">&#123;</div><div class="line">    <span class="keyword">bool</span> r;</div><div class="line">    <span class="keyword">if</span> (mAndroidAnimation) &#123;</div><div class="line">        <span class="comment">//NOTE(ljs):执行android字体闪动的图片</span></div><div class="line">        r = android();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">//NOTE(ljs):执行bootanimation.zip中提供的动画图片</span></div><div class="line">        r = movie();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ....</div><div class="line"></div><div class="line">    <span class="keyword">return</span> r;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 如果对bootanimation.zip的种种逻辑判断，得出结论是不播放动画时，就展示Android字体闪动的图片，如果可以播放动画，就播放bootanimation.zip提供的动画。</p>
+<h4 id="2-2-关于Android字体闪动的图片"><a href="#2-2-关于Android字体闪动的图片" class="headerlink" title="2.2 关于Android字体闪动的图片"></a>2.2 关于Android字体闪动的图片</h4><p>我们先看一下函数实现</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">bool</span> BootAnimation::android()</div><div class="line">&#123;</div><div class="line">    ALOGD(<span class="string">"BootAnimation::android()"</span>);</div><div class="line">    <span class="comment">//NOTE(ljs):/frameworks/base/core/res/assets/images/android-logo-mask.png</span></div><div class="line">    <span class="comment">//NOTE(ljs):/frameworks/base/core/res/assets/images/android-logo-shine.png</span></div><div class="line">    initTexture(&amp;mAndroid[<span class="number">0</span>], mAssets, <span class="string">"images/android-logo-mask.png"</span>);</div><div class="line">    initTexture(&amp;mAndroid[<span class="number">1</span>], mAssets, <span class="string">"images/android-logo-shine.png"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// clear screen</span></div><div class="line">    glShadeModel(GL_FLAT);</div><div class="line">    glDisable(GL_DITHER);</div><div class="line">    glDisable(GL_SCISSOR_TEST);</div><div class="line">    glClearColor(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>);</div><div class="line">    glClear(GL_COLOR_BUFFER_BIT);</div><div class="line">    eglSwapBuffers(mDisplay, mSurface);</div><div class="line"></div><div class="line">    glEnable(GL_TEXTURE_2D);</div><div class="line">    glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);</div><div class="line"></div><div class="line">    <span class="keyword">const</span> GLint xc = (mWidth  - mAndroid[<span class="number">0</span>].w) / <span class="number">2</span>;</div><div class="line">    <span class="keyword">const</span> GLint yc = (mHeight - mAndroid[<span class="number">0</span>].h) / <span class="number">2</span>;</div><div class="line">    <span class="function"><span class="keyword">const</span> Rect <span class="title">updateRect</span><span class="params">(xc, yc, xc + mAndroid[<span class="number">0</span>].w, yc + mAndroid[<span class="number">0</span>].h)</span></span>;</div><div class="line"></div><div class="line">    glScissor(updateRect.left, mHeight - updateRect.bottom, updateRect.width(), updateRect.height());</div><div class="line"></div><div class="line">    <span class="comment">// Blend state</span></div><div class="line">    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);</div><div class="line">    glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);</div><div class="line"></div><div class="line">    <span class="keyword">const</span> <span class="keyword">nsecs_t</span> startTime = systemTime();</div><div class="line">    <span class="keyword">do</span> &#123;</div><div class="line">        <span class="keyword">nsecs_t</span> now = systemTime();</div><div class="line">        <span class="keyword">double</span> time = now - startTime;</div><div class="line">        <span class="keyword">float</span> t = <span class="number">4.0f</span> * <span class="keyword">float</span>(time / us2ns(<span class="number">16667</span>)) / mAndroid[<span class="number">1</span>].w;</div><div class="line">        GLint offset = (<span class="number">1</span> - (t - floorf(t))) * mAndroid[<span class="number">1</span>].w;</div><div class="line">        GLint x = xc - offset;</div><div class="line"></div><div class="line">        glDisable(GL_SCISSOR_TEST);</div><div class="line">        glClear(GL_COLOR_BUFFER_BIT);</div><div class="line"></div><div class="line">        glEnable(GL_SCISSOR_TEST);</div><div class="line">        glDisable(GL_BLEND);</div><div class="line">        glBindTexture(GL_TEXTURE_2D, mAndroid[<span class="number">1</span>].name);</div><div class="line">        glDrawTexiOES(x, yc, <span class="number">0</span>, mAndroid[<span class="number">1</span>].w, mAndroid[<span class="number">1</span>].h);</div><div class="line">        glDrawTexiOES(x + mAndroid[<span class="number">1</span>].w, yc, <span class="number">0</span>, mAndroid[<span class="number">1</span>].w, mAndroid[<span class="number">1</span>].h);</div><div class="line"></div><div class="line">        glEnable(GL_BLEND);</div><div class="line">        glBindTexture(GL_TEXTURE_2D, mAndroid[<span class="number">0</span>].name);</div><div class="line">        glDrawTexiOES(xc, yc, <span class="number">0</span>, mAndroid[<span class="number">0</span>].w, mAndroid[<span class="number">0</span>].h);</div><div class="line"></div><div class="line">        EGLBoolean res = eglSwapBuffers(mDisplay, mSurface);</div><div class="line">        <span class="keyword">if</span> (res == EGL_FALSE)</div><div class="line">            <span class="keyword">break</span>;</div><div class="line"></div><div class="line">        <span class="comment">// 12fps: don't animate too fast to preserve CPU</span></div><div class="line">        <span class="keyword">const</span> <span class="keyword">nsecs_t</span> sleepTime = <span class="number">83333</span> - ns2us(systemTime() - now);</div><div class="line">        <span class="keyword">if</span> (sleepTime &gt; <span class="number">0</span>)</div><div class="line">            usleep(sleepTime);</div><div class="line"></div><div class="line">        checkExit();</div><div class="line">    &#125; <span class="keyword">while</span> (!exitPending());</div><div class="line"></div><div class="line">    glDeleteTextures(<span class="number">1</span>, &amp;mAndroid[<span class="number">0</span>].name);</div><div class="line">    glDeleteTextures(<span class="number">1</span>, &amp;mAndroid[<span class="number">1</span>].name);</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>利用OpenGL把<strong>android-logo-mask.png</strong>和<strong>android-logo-shine.png</strong>展示。<br>这两者图片具体位置:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./frameworks/base/core/res/assets/images/android-logo-mask.png</div><div class="line">./frameworks/base/core/res/assets/images/android-logo-shine.png</div></pre></td></tr></table></figure>
+<p>我们看一下图片<br><img src="http://oh6ghytzv.bkt.clouddn.com/android-logo-mask.png" alt="android-logo-mask.png"><br><img src="http://oh6ghytzv.bkt.clouddn.com/android-logo-shine.png" alt="android-logo-shine.png"></p>
+<p>是不是现在明白了什么…</p>
+<blockquote>
+<p>TODO OpenGL是如何把这2张图片呈现出来的？？？？？？？待研究</p>
+</blockquote>
+<h4 id="2-3-关于Android的bootanimation-zip动画"><a href="#2-3-关于Android的bootanimation-zip动画" class="headerlink" title="2.3 关于Android的bootanimation.zip动画"></a>2.3 关于Android的bootanimation.zip动画</h4><p>我们先看一下具体函数实现:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">bool</span> BootAnimation::movie()</div><div class="line">&#123;</div><div class="line">	....</div><div class="line">	<span class="comment">//NOTE(ljs):OpenGL相关不作分析...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们看一下到底bootanimation.zip文件是个什么样的文件。我已将把miui和优朋普乐的开机动画文件传至github。<br><a href="https://github.com/junshengluo/bootanimation" target="_blank" rel="external">github-bootanimation</a></p>
+<p>我们解压miui的会看到如下文件</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">|--bootanimation</div><div class="line">		|--part0</div><div class="line">			|<span class="number">-01.</span>png</div><div class="line">			|<span class="number">-02.</span>png</div><div class="line">			|<span class="number">-03.</span>png</div><div class="line">			|<span class="number">-04.</span>png</div><div class="line">			|<span class="number">-05.</span>png</div><div class="line">		|--desc.txt</div></pre></td></tr></table></figure>
+<p>当看到01-05.png的时候，我想大家就明白了，原来我们看到的动画是这5张图片的帧动画。<br>而对于desc.txt 文件我们看一下内容:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">1080</span> <span class="number">1920</span> <span class="number">5</span></div><div class="line">p <span class="number">0</span> <span class="number">5</span> part0</div></pre></td></tr></table></figure>
+<p>对于这个描述文件我组一下说明:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">1080</span> <span class="number">1920</span> <span class="number">5</span> ----这里的<span class="number">1080</span>代表图片的像素（大小）宽度，<span class="number">1920</span>代表图片的像素（大小）高度，<span class="number">5</span>代表帧数，也就是图片一共多少张</div><div class="line">p <span class="number">1</span> <span class="number">0</span> part0 ---这里的p代表标志符，<span class="number">1</span>代表循环次数为<span class="number">1</span>次，<span class="number">0</span>代表阶段间隔时间为<span class="number">0</span>,part0代表对应的文件夹名</div></pre></td></tr></table></figure>
+<p>对应voole的bootanimation.zip文件解压如下:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">|--bootanimation</div><div class="line">		|--part0</div><div class="line">			|<span class="number">-01.</span>png</div><div class="line">		|--part1</div><div class="line">			|<span class="number">-01.</span>png</div><div class="line">			|<span class="number">-02.</span>png</div><div class="line">			|<span class="number">-03.</span>png</div><div class="line">			|<span class="number">-04.</span>png</div><div class="line">			|<span class="number">-05.</span>png</div><div class="line">		|--desc.txt</div></pre></td></tr></table></figure>
+<p>desc.txt描述如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1280 720 3</div><div class="line">p 1 0 part0</div><div class="line">p 5 0 part1</div></pre></td></tr></table></figure>
+<p>如此我们看到这个bootanimation.zip帧动画的实现的灵活性。</p>
+<h3 id="三，开机画面的最后"><a href="#三，开机画面的最后" class="headerlink" title="三，开机画面的最后"></a>三，开机画面的最后</h3><p>通过上面我们基本了解了整个开机画面的显示流程和实现细节(其实还有大量没研究…)。<br>最后通过探究开机动画的内部实现，发现Android 涉及的知识面太庞大。<br>努力学习….</p>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oh6ghytzv.bkt.clouddn.com/weixin-pay.png" alt="luojunsheng WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oh6ghytzv.bkt.clouddn.com/ali-pay.jpg" alt="luojunsheng Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/Framework/" rel="tag"># Framework</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/26/探究 init.rc 脚本/" rel="next" title="探究 init.rc 脚本">
+                <i class="fa fa-chevron-left"></i> 探究 init.rc 脚本
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/26/探究 init.rc 脚本副本/" data-title="探究 Android 开机画面" data-url="http://junshengluo.com/2016/11/26/探究 init.rc 脚本副本/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="https://avatars3.githubusercontent.com/u/10328555?v=3&s=460" alt="luojunsheng">
+          <p class="site-author-name" itemprop="name">luojunsheng</p>
+          <p class="site-description motion-element" itemprop="description">学习总结 思考感悟 知识管理</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/junshengluo" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究-Android-开机画面"><span class="nav-text">探究 Android 开机画面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，前言"><span class="nav-text">一，前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，关于开机画面"><span class="nav-text">二，关于开机画面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，关于开机画面第一层动画"><span class="nav-text">二，关于开机画面第一层动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，关于开机画面第二层动画"><span class="nav-text">二，关于开机画面第二层动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，关于开机画面第三层动画"><span class="nav-text">二，关于开机画面第三层动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，关于开机画面第四层动画"><span class="nav-text">二，关于开机画面第四层动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-开机画面第四层动画的流程"><span class="nav-text">2.1 开机画面第四层动画的流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-关于Android字体闪动的图片"><span class="nav-text">2.2 关于Android字体闪动的图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-关于Android的bootanimation-zip动画"><span class="nav-text">2.3 关于Android的bootanimation.zip动画</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，开机画面的最后"><span class="nav-text">三，开机画面的最后</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">luojunsheng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+<div class="theme-info">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260864662'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1260864662%26online%3D2' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"junshengluo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("BleqWuRF0pGBxTnuwj3jPNC1-gzGzoHsz", "imaApFCh0H5f6jz7WJ532AM7");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
