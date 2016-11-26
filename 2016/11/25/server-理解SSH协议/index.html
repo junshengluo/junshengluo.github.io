@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="android,Framework,">
+  <meta name="keywords" content="ssh,">
 
 
 
@@ -86,16 +86,30 @@
 
 
 
-<meta name="description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
+<meta name="description" content="理解SSH协议一，什么是SSH协议？SSH，全称Secure SHell protocol，即安全外壳协议，可以在不安全的网络环境里提供安全远程登录及其他安全网络服务的协议。
+二，秘钥说明
+公钥和私钥的关系类似解密。 在登录和验证时，都会同时用到这两个密钥。 
+公钥位于服务器上(远程位置)。 私钥位于本地计算机/服务器上。 
+当登录服务器时，两者将进行配对。 如果它们配对成功，您将可以登录到服务器">
 <meta property="og:type" content="article">
-<meta property="og:title" content="探究 init.rc 脚本">
-<meta property="og:url" content="http://junshengluo.com/2016/11/26/探究 init.rc 脚本/index.html">
+<meta property="og:title" content="理解SSH协议">
+<meta property="og:url" content="http://junshengluo.com/2016/11/25/server-理解SSH协议/index.html">
 <meta property="og:site_name" content="luojunsheng's blog">
-<meta property="og:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
-<meta property="og:updated_time" content="2016-11-26T06:28:36.000Z">
+<meta property="og:description" content="理解SSH协议一，什么是SSH协议？SSH，全称Secure SHell protocol，即安全外壳协议，可以在不安全的网络环境里提供安全远程登录及其他安全网络服务的协议。
+二，秘钥说明
+公钥和私钥的关系类似解密。 在登录和验证时，都会同时用到这两个密钥。 
+公钥位于服务器上(远程位置)。 私钥位于本地计算机/服务器上。 
+当登录服务器时，两者将进行配对。 如果它们配对成功，您将可以登录到服务器">
+<meta property="og:image" content="http://oh6ghytzv.bkt.clouddn.com/ssh%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png">
+<meta property="og:updated_time" content="2016-11-26T08:14:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="探究 init.rc 脚本">
-<meta name="twitter:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
+<meta name="twitter:title" content="理解SSH协议">
+<meta name="twitter:description" content="理解SSH协议一，什么是SSH协议？SSH，全称Secure SHell protocol，即安全外壳协议，可以在不安全的网络环境里提供安全远程登录及其他安全网络服务的协议。
+二，秘钥说明
+公钥和私钥的关系类似解密。 在登录和验证时，都会同时用到这两个密钥。 
+公钥位于服务器上(远程位置)。 私钥位于本地计算机/服务器上。 
+当登录服务器时，两者将进行配对。 如果它们配对成功，您将可以登录到服务器">
+<meta name="twitter:image" content="http://oh6ghytzv.bkt.clouddn.com/ssh%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png">
 
 
 
@@ -123,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="http://junshengluo.com/2016/11/26/探究 init.rc 脚本/">
+  <link rel="canonical" href="http://junshengluo.com/2016/11/25/server-理解SSH协议/">
 
 
 
 
 
-  <title> 探究 init.rc 脚本 | luojunsheng's blog </title>
+  <title> 理解SSH协议 | luojunsheng's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -283,7 +297,7 @@
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/11/26/探究 init.rc 脚本/">
+  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/11/25/server-理解SSH协议/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="luojunsheng">
@@ -307,7 +321,7 @@
             
             
               
-                探究 init.rc 脚本
+                理解SSH协议
               
             
           </h1>
@@ -320,8 +334,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-26T13:00:13+08:00">
-                2016-11-26
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-25T11:40:11+08:00">
+                2016-11-25
               </time>
             
 
@@ -339,8 +353,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
+                  <a href="/categories/server/" itemprop="url" rel="index">
+                    <span itemprop="name">server</span>
                   </a>
                 </span>
 
@@ -354,8 +368,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/11/26/探究 init.rc 脚本/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/26/探究 init.rc 脚本/" itemprop="commentCount"></span>
+                <a href="/2016/11/25/server-理解SSH协议/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/25/server-理解SSH协议/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -365,7 +379,7 @@
 
           
           
-             <span id="/2016/11/26/探究 init.rc 脚本/" class="leancloud_visitors" data-flag-title="探究 init.rc 脚本">
+             <span id="/2016/11/25/server-理解SSH协议/" class="leancloud_visitors" data-flag-title="理解SSH协议">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -390,195 +404,18 @@
       
 
       
-        <h2 id="探究-init-rc-脚本"><a href="#探究-init-rc-脚本" class="headerlink" title="探究 init.rc 脚本"></a>探究 init.rc 脚本</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>我们在前文<a href="http://junshengluo.com/2016/11/24/%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">探究Android OS 启动流程</a>中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.<br>下面我们来一探究竟。<br>关于init.rc 源码在<a href="">./system/core/rootdir/init.rc</a>.<br>其说明文件google也给出来了就在源码里<a href="">./system/init/readme.txt</a>，如果你英文比较好，基本可以略过这篇文章了。</p>
-<h3 id="二，关于init-rc"><a href="#二，关于init-rc" class="headerlink" title="二，关于init.rc"></a>二，关于init.rc</h3><p>init.rc文件基本组成单位是section(段落)，section分为三种类型，分别用on,service,import关键字表示.</p>
-<h4 id="2-1-import-类型"><a href="#2-1-import-类型" class="headerlink" title="2.1 import 类型"></a>2.1 import 类型</h4><ul>
-<li>主要作用: 表示引入另外一个xx.rc文件</li>
-<li>语法:</li>
+        <h2 id="理解SSH协议"><a href="#理解SSH协议" class="headerlink" title="理解SSH协议"></a>理解SSH协议</h2><h3 id="一，什么是SSH协议？"><a href="#一，什么是SSH协议？" class="headerlink" title="一，什么是SSH协议？"></a>一，什么是SSH协议？</h3><p>SSH，全称Secure SHell protocol，即安全外壳协议，可以在不安全的网络环境里提供安全远程登录及其他安全网络服务的协议。</p>
+<h3 id="二，秘钥说明"><a href="#二，秘钥说明" class="headerlink" title="二，秘钥说明"></a>二，秘钥说明</h3><ul>
+<li>公钥和私钥的关系类似解密。 在登录和验证时，都会同时用到这两个密钥。 </li>
+<li>公钥位于服务器上(远程位置)。 私钥位于本地计算机/服务器上。 </li>
+<li>当登录服务器时，两者将进行配对。 如果它们配对成功，您将可以登录到服务器上</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> /init.environ.rc</div><div class="line"><span class="keyword">import</span> /init.usb.rc</div><div class="line"><span class="keyword">import</span> /init.$&#123;ro.hardware&#125;.rc</div><div class="line"><span class="keyword">import</span> /init.trace.rc</div></pre></td></tr></table></figure>
-<h4 id="2-2-on-类型"><a href="#2-2-on-类型" class="headerlink" title="2.2 on 类型"></a>2.2 on 类型</h4><ul>
-<li>主要作用: 表示一系列命令的组合(也就是Action类型):</li>
-<li>语法:</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">on &lt;trigger&gt;</div><div class="line">   &lt;command&gt;  </div><div class="line">   &lt;command&gt;  </div><div class="line">   &lt;command&gt;</div></pre></td></tr></table></figure>
-<h4 id="2-3-service-类型"><a href="#2-3-service-类型" class="headerlink" title="2.3 service 类型"></a>2.3 service 类型</h4><ul>
-<li>主要作用: 表示一个可执行程序</li>
-<li>语法:表示一个可执行程序</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server</div><div class="line">    class main</div><div class="line">    socket zygote stream 660 root system</div><div class="line">    onrestart write /sys/android_power/request_state wake</div><div class="line">    onrestart write /sys/power/state on</div><div class="line">    onrestart restart media</div><div class="line">    onrestart restart netd</div></pre></td></tr></table></figure>
-<h3 id="三，关于init-rc-语句语法"><a href="#三，关于init-rc-语句语法" class="headerlink" title="三，关于init.rc 语句语法"></a>三，关于init.rc 语句语法</h3><p>我们上面说了init.rc文件的基本组成单位是section，而上述的3中section只要有如下几种语句组成</p>
-<h4 id="3-1-Action-动作-表示了一组命令-commands-组成"><a href="#3-1-Action-动作-表示了一组命令-commands-组成" class="headerlink" title="3.1:Action(动作):表示了一组命令(commands)组成."></a>3.1:Action(动作):表示了一组命令(commands)组成.</h4><ol>
-<li>Action包含一个trigger(触发器)，决定了何时执行这个动作;</li>
-<li>当触发器的条件满足时,这个动作会被加入到已被执行的队列尾;</li>
-<li>如果此动作在队列中已经存在,那么它将不会执行.</li>
-<li>一个Action所包含的命令将被依次执行;动作的语法如下所示:</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">on &lt;trigger&gt;</div><div class="line">   &lt;command&gt;  </div><div class="line">   &lt;command&gt;  </div><div class="line">   &lt;command&gt;</div></pre></td></tr></table></figure>
-<h4 id="3-2-Commands-命令"><a href="#3-2-Commands-命令" class="headerlink" title="3.2:Commands:命令"></a>3.2:Commands:命令</h4><p>Commands 详见如下:</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>描述 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>chmod &lt;octal-mode&gt; &lt;path&gt;</td>
-<td>改变指定文件的读取权限</td>
-</tr>
-<tr>
-<td>chown &lt;owner&gt; &lt;group&gt; &lt;path&gt;</td>
-<td>改变指定文件的拥有都和组名的属性</td>
-</tr>
-<tr>
-<td>chroot &lt;directory&gt;</td>
-<td>改变进行的根目录</td>
-</tr>
-<tr>
-<td>class_start &lt;serviceclass&gt;</td>
-<td>启动指定类属的所有服务，如果服务已经启动，则不再重复启动</td>
-</tr>
-<tr>
-<td>class_stop &lt;serviceclass&gt;</td>
-<td>停止指定类属的所胡服务</td>
-</tr>
-<tr>
-<td>domainname &lt;name&gt;</td>
-<td>设置域名</td>
-</tr>
-<tr>
-<td>export &lt;name&gt; &lt;value&gt;</td>
-<td>设置全局环境参数，此参数被设置后对所有进程都有效</td>
-</tr>
-<tr>
-<td>exec &lt;path&gt; [ &lt;argument&gt; ]*</td>
-<td>执行指定路径下的程序，并传递参数</td>
-</tr>
-<tr>
-<td>hostname &lt;name&gt;</td>
-<td>设置主机名</td>
-</tr>
-<tr>
-<td>ifup &lt;interface&gt;</td>
-<td>使指定的网络接口”上线”，相当激活指定的网络接口</td>
-</tr>
-<tr>
-<td>import &lt;filename&gt;</td>
-<td>导入一个额外的init配置文件</td>
-</tr>
-<tr>
-<td>insmod &lt;path&gt;</td>
-<td>安装模块到指定路径</td>
-</tr>
-<tr>
-<td>mkdir &lt;path&gt; [mode] [owner] [group]</td>
-<td>用指定参数创建一个目录，在默认情况下，创建的目录读取权限为755，用户名为root，组名为root</td>
-</tr>
-<tr>
-<td>mount &lt;type&gt; &lt;device&gt; &lt;dir&gt; [ &lt;mountoption&gt; ]*</td>
-<td>类似于linux的mount指令</td>
-</tr>
-<tr>
-<td>start &lt;service&gt;</td>
-<td>如果指定的服务未启动，则启动它 </td>
-</tr>
-<tr>
-<td>stop &lt;service&gt;</td>
-<td>如果指定的服务当前正在运行，则停止它 </td>
-</tr>
-<tr>
-<td>setprop &lt;name&gt; &lt;value&gt;</td>
-<td>设置属性及对应的值</td>
-</tr>
-<tr>
-<td>trigger &lt;event&gt;</td>
-<td>触发器</td>
-</tr>
-<tr>
-<td>write &lt;path&gt; &lt;string&gt; [ &lt;string&gt; ]*</td>
-<td>往指定的文件写字符串</td>
-</tr>
-</tbody>
-</table>
-<h4 id="3-3-Services"><a href="#3-3-Services" class="headerlink" title="3.3:Services:"></a>3.3:Services:</h4><p>服务是指那些需要在系统初始化时就启动或退出时自动重启的程序。<br>它的语法结构如下所示:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">service &lt;name&gt; &lt;pathname&gt; [ &lt;argument&gt; ]*  </div><div class="line">  &lt;option&gt;  </div><div class="line">  &lt;option&gt;  </div><div class="line">  ...</div></pre></td></tr></table></figure>
-<h4 id="3-4-Options"><a href="#3-4-Options" class="headerlink" title="3.4:Options"></a>3.4:Options</h4><p>Options:用来修改服务的;它们影响如何及何时运行这个服务</p>
-<table>
-<thead>
-<tr>
-<th>选项</th>
-<th>描述 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>critical</td>
-<td>据设备相关的关键服务，如果在4分钟内，此服务重复启动了4次，那么设备将会重启进入还原模式。</td>
-</tr>
-<tr>
-<td>disabled</td>
-<td>服务不会自动运行，必须显式地通过服务器来启动。</td>
-</tr>
-<tr>
-<td>setenv &lt;name&gt; &lt;value&gt;</td>
-<td>设置环境变量</td>
-</tr>
-<tr>
-<td>socket &lt;name&gt; &lt;type&gt; &lt;perm&gt; [ &lt;user&gt; [ &lt;group&gt; ] ]</td>
-<td>在/dev/socket/下创建一个unix domain的socket，并传递创建的文件描述符fd给服务进程.其中type必须为dgram或stream,seqpacket。用户名和组名默认为0</td>
-</tr>
-<tr>
-<td>user &lt;username&gt;</td>
-<td>在执行此服务之前先切换用户名。当前默认为root.</td>
-</tr>
-<tr>
-<td>oneshot</td>
-<td>当此服务退出时不会自动重启.</td>
-</tr>
-<tr>
-<td>class &lt;name&gt;</td>
-<td>给服务指定一个类属。这样方便操作多个服务同时启动或停止。默认情况下为default。</td>
-</tr>
-<tr>
-<td>onrestart</td>
-<td>当服务重启时执行一条指令</td>
-</tr>
-</tbody>
-</table>
-<h4 id="3-5-trigger"><a href="#3-5-trigger" class="headerlink" title="3.5:trigger"></a>3.5:trigger</h4><p>trigger:触发器,或者叫做触发条件</p>
-<table>
-<thead>
-<tr>
-<th>触发器</th>
-<th>描述 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>boot</td>
-<td>当init程序执行，并载入/init.conf文件时触发.</td>
-</tr>
-<tr>
-<td>&lt;name&gt;=&lt;value&gt;</td>
-<td>当属性名对应的值设置为指定值时触发.</td>
-</tr>
-<tr>
-<td>device-added-&lt;path&gt;</td>
-<td>当添加设备时触发.</td>
-</tr>
-<tr>
-<td>device-removed-&lt;path&gt;</td>
-<td>当设备移除时触发.</td>
-</tr>
-<tr>
-<td>service-exited-&lt;name&gt;</td>
-<td>当指定的服务退出时触发.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="四，语法的最后"><a href="#四，语法的最后" class="headerlink" title="四，语法的最后"></a>四，语法的最后</h3><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1. 在init.rc文件中一条语句通常是占据一行;</div><div class="line">2. 单词之间是通过空格符来相隔的;</div><div class="line">3. 如果需要在单词内使用空格,那么得使用转义字符"\",如果在一行的末尾有一个反斜杠,那么是换行折叠符号,应该和下一行合并成一起来处理,这样做主要是为了避免一行的字符太长,与C语言中的含义是一致的;</div><div class="line">4. 注释是以#号开头;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>用公钥认证是密码认证的一种替换方式。<br>由于必须持有私钥才能认证，所有要想强行破解几乎是不可能的</p>
+</blockquote>
+<h3 id="三，SSH的工作原理"><a href="#三，SSH的工作原理" class="headerlink" title="三，SSH的工作原理"></a>三，SSH的工作原理</h3><p><img src="http://oh6ghytzv.bkt.clouddn.com/ssh%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.png" alt="SSH的工作原理"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">1. server启动sshd服务，生成公钥+私钥</div><div class="line">2. 客户端主动发送请求</div><div class="line">命令如下:</div><div class="line"></div><div class="line">&gt; $ ssh username@ip</div><div class="line"></div><div class="line">3. server响应请求，将公钥（????明文????）发给client</div><div class="line"></div><div class="line">client收到server的公钥后做了如下工作</div><div class="line">&gt;客户端记录并比对服务器的公钥数据及随机计算自己的公私钥 :</div><div class="line">&gt;若客户端第一次连接到此服务器，则会将服务器的公钥记录到客户端的用户家目录内的 ~/.ssh/known_hosts 。</div><div class="line">&gt;若是已经记录过该服务器的公钥，则客户端会去比对此次接收到的与之前的记录是否有差异。</div><div class="line">&gt;若接受此公钥， 则开始计算客户端自己的公钥+私钥.</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">4. clent将自己的公钥回传到server</div><div class="line"></div><div class="line">此时:</div><div class="line">&gt;server	:具有自己的私钥和client的公钥;</div><div class="line">&gt;client	:具有自己的私钥和server的公钥;</div><div class="line"></div><div class="line">&gt;你会看到，在此次联机的服务器与客户端的密钥系统 (公钥+私钥) 并不一样，所以才称为非对称加密系统。</div><div class="line">开始双向加解密:</div><div class="line">&gt;服务器到客户端：服务器传送数据时，拿用户的公钥加密后送出。客户端接收后，用自己的私钥解密;</div><div class="line">&gt;客户端到服务器：客户端传送数据时，拿服务器的公钥加密后送出。服务器接收后，用服务器的私钥解密，这样就能保证通信安全</div></pre></td></tr></table></figure>
+<p>### </p>
       
     </div>
 
@@ -622,9 +459,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android/" rel="tag"># android</a>
-          
-            <a href="/tags/Framework/" rel="tag"># Framework</a>
+            <a href="/tags/ssh/" rel="tag"># ssh</a>
           
         </div>
       
@@ -633,8 +468,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/25/理解SSH协议/" rel="next" title="理解SSH协议">
-                <i class="fa fa-chevron-left"></i> 理解SSH协议
+              <a href="/2016/11/24/android-1-探究Android OS 启动流程/" rel="next" title="探究Android OS 启动流程">
+                <i class="fa fa-chevron-left"></i> 探究Android OS 启动流程
               </a>
             
           </div>
@@ -643,8 +478,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/11/26/探究 init.rc 脚本副本/" rel="prev" title="探究 Android 开机画面">
-                探究 Android 开机画面 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/11/26/android-2-探究 init.rc 脚本/" rel="prev" title="探究 init.rc 脚本">
+                探究 init.rc 脚本 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -694,7 +529,7 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/26/探究 init.rc 脚本/" data-title="探究 init.rc 脚本" data-url="http://junshengluo.com/2016/11/26/探究 init.rc 脚本/">
+      <div class="ds-thread" data-thread-key="2016/11/25/server-理解SSH协议/" data-title="理解SSH协议" data-url="http://junshengluo.com/2016/11/25/server-理解SSH协议/">
       </div>
     
   </div>
@@ -807,7 +642,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究-init-rc-脚本"><span class="nav-text">探究 init.rc 脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，前言"><span class="nav-text">一，前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，关于init-rc"><span class="nav-text">二，关于init.rc</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-import-类型"><span class="nav-text">2.1 import 类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-on-类型"><span class="nav-text">2.2 on 类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-service-类型"><span class="nav-text">2.3 service 类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，关于init-rc-语句语法"><span class="nav-text">三，关于init.rc 语句语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-Action-动作-表示了一组命令-commands-组成"><span class="nav-text">3.1:Action(动作):表示了一组命令(commands)组成.</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Commands-命令"><span class="nav-text">3.2:Commands:命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-Services"><span class="nav-text">3.3:Services:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-Options"><span class="nav-text">3.4:Options</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-trigger"><span class="nav-text">3.5:trigger</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四，语法的最后"><span class="nav-text">四，语法的最后</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#理解SSH协议"><span class="nav-text">理解SSH协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，什么是SSH协议？"><span class="nav-text">一，什么是SSH协议？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，秘钥说明"><span class="nav-text">二，秘钥说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，SSH的工作原理"><span class="nav-text">三，SSH的工作原理</span></a></li></ol></li></ol></div>
             
 
           </div>
