@@ -87,18 +87,21 @@
 
 
 <meta name="description" content="探究 Android 属性服务一，前言在系统初始化时，Android会分配一个共享内存区来存储一些系统属性，主要用来记录系统相关设置、状态或者进程之间交互信息。一部分系统属性是从本地文件加载到内存中的，一部分是在内存临时创建的。系统属性对于整个OS是可见的，每个进程都可以利用属性服务对系统属性进程get或set操作。下面我们看看整个属性机制是怎么运作的？
-二，三，属性系服务3.1 属性系服务的建立">
+二，设计到的类和流程图
+1234./sys">
 <meta property="og:type" content="article">
 <meta property="og:title" content="探究 Android 属性服务">
 <meta property="og:url" content="http://junshengluo.com/2016/11/28/android-4-探究 Android 属性服务/index.html">
 <meta property="og:site_name" content="luojunsheng's blog">
 <meta property="og:description" content="探究 Android 属性服务一，前言在系统初始化时，Android会分配一个共享内存区来存储一些系统属性，主要用来记录系统相关设置、状态或者进程之间交互信息。一部分系统属性是从本地文件加载到内存中的，一部分是在内存临时创建的。系统属性对于整个OS是可见的，每个进程都可以利用属性服务对系统属性进程get或set操作。下面我们看看整个属性机制是怎么运作的？
-二，三，属性系服务3.1 属性系服务的建立">
-<meta property="og:updated_time" content="2016-11-28T06:03:51.000Z">
+二，设计到的类和流程图
+1234./sys">
+<meta property="og:updated_time" content="2016-11-28T06:37:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="探究 Android 属性服务">
 <meta name="twitter:description" content="探究 Android 属性服务一，前言在系统初始化时，Android会分配一个共享内存区来存储一些系统属性，主要用来记录系统相关设置、状态或者进程之间交互信息。一部分系统属性是从本地文件加载到内存中的，一部分是在内存临时创建的。系统属性对于整个OS是可见的，每个进程都可以利用属性服务对系统属性进程get或set操作。下面我们看看整个属性机制是怎么运作的？
-二，三，属性系服务3.1 属性系服务的建立">
+二，设计到的类和流程图
+1234./sys">
 
 
 
@@ -394,7 +397,16 @@
 
       
         <h2 id="探究-Android-属性服务"><a href="#探究-Android-属性服务" class="headerlink" title="探究 Android 属性服务"></a>探究 Android 属性服务</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>在系统初始化时，Android会分配一个共享内存区来存储一些系统属性，主要用来记录系统相关设置、状态或者进程之间交互信息。一部分系统属性是从本地文件加载到内存中的，一部分是在内存临时创建的。系统属性对于整个OS是可见的，每个进程都可以利用属性服务对系统属性进程get或set操作。下面我们看看整个属性机制是怎么运作的？</p>
-<h3 id="二，"><a href="#二，" class="headerlink" title="二，"></a>二，</h3><h3 id="三，属性系服务"><a href="#三，属性系服务" class="headerlink" title="三，属性系服务"></a>三，属性系服务</h3><h4 id="3-1-属性系服务的建立"><a href="#3-1-属性系服务的建立" class="headerlink" title="3.1 属性系服务的建立"></a>3.1 属性系服务的建立</h4><p>我们在前文<a href="http://junshengluo.com/2016/11/24/android-1-%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">探究Android OS 启动流程</a>中</p>
+<h3 id="二，"><a href="#二，" class="headerlink" title="二，"></a>二，</h3><p>设计到的类和流程图</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">./system/core/init/init.c</div><div class="line">./system/core/init/property_service.c</div><div class="line">./bionic/libc/include/sys/_system_properties.h</div><div class="line">./bionic/libc/bionic/system_properties.c</div></pre></td></tr></table></figure>
+<h3 id="三，属性系服务"><a href="#三，属性系服务" class="headerlink" title="三，属性系服务"></a>三，属性系服务</h3><h4 id="3-1-属性系服务的初始化"><a href="#3-1-属性系服务的初始化" class="headerlink" title="3.1 属性系服务的初始化"></a>3.1 属性系服务的初始化</h4><p>我们在前文<a href="http://junshengluo.com/2016/11/24/android-1-%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">探究Android OS 启动流程</a>中得知，在init进程中会开启Android 的属性服务:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></div><div class="line">&#123;	....</div><div class="line">	<span class="comment">//NOTE(ljs):初始化属性服务</span></div><div class="line">	property_init();</div><div class="line">	....</div><div class="line">	<span class="comment">//NOTE(ljs):启动属性服务</span></div><div class="line">	queue_builtin_action(property_service_init_action, <span class="string">"property_service_init"</span>);</div><div class="line">	....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们进一步看一下Property的初始化，参照 property_service.c 。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">property_init</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    init_property_area();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">init_property_area</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):初始化区域用于存储属性</span></div><div class="line">    <span class="keyword">if</span>(__system_property_area_init())</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    ....</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> __system_property_area_init()</div><div class="line">&#123;</div><div class="line">    <span class="keyword">return</span> map_prop_area_rw();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">map_prop_area</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):文件property_filename被打开,并以读写,可共享的方式映射到了内存</span></div><div class="line">    fd = open(property_filename, O_RDONLY | O_NOFOLLOW | O_CLOEXEC);</div><div class="line">    ....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="3-2-启动属性系服务"><a href="#3-2-启动属性系服务" class="headerlink" title="3.2 启动属性系服务"></a>3.2 启动属性系服务</h4><p>在init的main()函数中</p>
       
     </div>
 
@@ -619,7 +631,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究-Android-属性服务"><span class="nav-text">探究 Android 属性服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，前言"><span class="nav-text">一，前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，"><span class="nav-text">二，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，属性系服务"><span class="nav-text">三，属性系服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-属性系服务的建立"><span class="nav-text">3.1 属性系服务的建立</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究-Android-属性服务"><span class="nav-text">探究 Android 属性服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，前言"><span class="nav-text">一，前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，"><span class="nav-text">二，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，属性系服务"><span class="nav-text">三，属性系服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-属性系服务的初始化"><span class="nav-text">3.1 属性系服务的初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-启动属性系服务"><span class="nav-text">3.2 启动属性系服务</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>
