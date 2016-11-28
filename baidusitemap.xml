@@ -5,11 +5,33 @@
     
   <url>
     <loc>http://junshengluo.com/2016/11/26/android-3-%E6%8E%A2%E7%A9%B6%20Android%20%E5%BC%80%E6%9C%BA%E7%94%BB%E9%9D%A2/</loc>
-    <lastmod>2016-11-28T02:47:42.000Z</lastmod>
+    <lastmod>2016-11-28T04:55:31.000Z</lastmod>
     <data>
         <display>
         <title>探究 Android 开机画面</title>
         <pubTime>2016-11-26T08:45:00.000Z</pubTime>
+        
+        <tag>android</tag>
+         
+        <tag>Framework</tag>
+         
+         
+           
+             
+              <breadCrumb title="android" url="http://junshengluo.com/categories/android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://junshengluo.com/2016/11/25/android-4-%E6%8E%A2%E7%A9%B6%20Android%20%E5%B1%9E%E6%80%A7%E6%9C%8D%E5%8A%A1/</loc>
+    <lastmod>2016-11-28T04:54:21.000Z</lastmod>
+    <data>
+        <display>
+        <title>探究 Android 属性服务</title>
+        <pubTime>2016-11-25T02:50:45.000Z</pubTime>
         
         <tag>android</tag>
          
