@@ -92,7 +92,7 @@
 <meta property="og:url" content="http://junshengluo.com/2016/11/26/android-2-探究 init.rc 脚本/index.html">
 <meta property="og:site_name" content="luojunsheng's blog">
 <meta property="og:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
-<meta property="og:updated_time" content="2016-11-26T06:28:36.000Z">
+<meta property="og:updated_time" content="2016-11-28T06:03:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="探究 init.rc 脚本">
 <meta name="twitter:description" content="探究 init.rc 脚本一，前言我们在前文探究Android OS 启动流程中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.下面我们来一探究竟。关于init.rc 源码在./system/core/rootdir/init.rc.其说明文件google也给出来了就在源码里./system/init/readme.txt，">
@@ -390,7 +390,7 @@
       
 
       
-        <h2 id="探究-init-rc-脚本"><a href="#探究-init-rc-脚本" class="headerlink" title="探究 init.rc 脚本"></a>探究 init.rc 脚本</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>我们在前文<a href="http://junshengluo.com/2016/11/24/%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">探究Android OS 启动流程</a>中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.<br>下面我们来一探究竟。<br>关于init.rc 源码在<a href="">./system/core/rootdir/init.rc</a>.<br>其说明文件google也给出来了就在源码里<a href="">./system/init/readme.txt</a>，如果你英文比较好，基本可以略过这篇文章了。</p>
+        <h2 id="探究-init-rc-脚本"><a href="#探究-init-rc-脚本" class="headerlink" title="探究 init.rc 脚本"></a>探究 init.rc 脚本</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>我们在前文<a href="http://junshengluo.com/2016/11/24/android-1-%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">探究Android OS 启动流程</a>中，曾说过，init进程解析init.rc脚本然后启动各种service，比如zygote、servicemanager等.<br>下面我们来一探究竟。<br>关于init.rc 源码在<a href="">./system/core/rootdir/init.rc</a>.<br>其说明文件google也给出来了就在源码里<a href="">./system/init/readme.txt</a>，如果你英文比较好，基本可以略过这篇文章了。</p>
 <h3 id="二，关于init-rc"><a href="#二，关于init-rc" class="headerlink" title="二，关于init.rc"></a>二，关于init.rc</h3><p>init.rc文件基本组成单位是section(段落)，section分为三种类型，分别用on,service,import关键字表示.</p>
 <h4 id="2-1-import-类型"><a href="#2-1-import-类型" class="headerlink" title="2.1 import 类型"></a>2.1 import 类型</h4><ul>
 <li>主要作用: 表示引入另外一个xx.rc文件</li>
