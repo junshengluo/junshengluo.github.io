@@ -1,0 +1,1098 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="android,Framework,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="luojunsheng's blog" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="探究 Android apk 安装过程一，前言在我们在前文探究Android OS 启动流程中，在第八部分我们遗留了app的安装与启动的分析。下面我就我们自身app的安装流程分析一下。
+二，apk的安装方式普通用户接触的app安装方式大都是从应用商店一键式安装或者下载app的安装包，然后点击安装，开发人员在调试apk工程中大多会用adb shell 命令安装。在以上几种过程中app的安装界面有的是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探究 Android apk 安装过程">
+<meta property="og:url" content="http://junshengluo.com/2016/11/30/android-5-探究 Android  apk 安装过程/index.html">
+<meta property="og:site_name" content="luojunsheng's blog">
+<meta property="og:description" content="探究 Android apk 安装过程一，前言在我们在前文探究Android OS 启动流程中，在第八部分我们遗留了app的安装与启动的分析。下面我就我们自身app的安装流程分析一下。
+二，apk的安装方式普通用户接触的app安装方式大都是从应用商店一键式安装或者下载app的安装包，然后点击安装，开发人员在调试apk工程中大多会用adb shell 命令安装。在以上几种过程中app的安装界面有的是">
+<meta property="og:updated_time" content="2016-11-30T08:46:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="探究 Android apk 安装过程">
+<meta name="twitter:description" content="探究 Android apk 安装过程一，前言在我们在前文探究Android OS 启动流程中，在第八部分我们遗留了app的安装与启动的分析。下面我就我们自身app的安装流程分析一下。
+二，apk的安装方式普通用户接触的app安装方式大都是从应用商店一键式安装或者下载app的安装包，然后点击安装，开发人员在调试apk工程中大多会用adb shell 命令安装。在以上几种过程中app的安装界面有的是">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://junshengluo.com/2016/11/30/android-5-探究 Android  apk 安装过程/">
+
+
+
+
+
+  <title> 探究 Android apk 安装过程 | luojunsheng's blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">luojunsheng's blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">android/......微笑,生活会越来越好</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/11/30/android-5-探究 Android  apk 安装过程/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="luojunsheng">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars3.githubusercontent.com/u/10328555?v=3&s=460">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="luojunsheng's blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none" itemprop="url image" alt="luojunsheng's blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                探究 Android apk 安装过程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-30T10:00:00+08:00">
+                2016-11-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/11/30/android-5-探究 Android  apk 安装过程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/30/android-5-探究 Android  apk 安装过程/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/11/30/android-5-探究 Android  apk 安装过程/" class="leancloud_visitors" data-flag-title="探究 Android apk 安装过程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="探究-Android-apk-安装过程"><a href="#探究-Android-apk-安装过程" class="headerlink" title="探究 Android apk 安装过程"></a>探究 Android apk 安装过程</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>在我们在前文<a href="http://junshengluo.com/2016/11/24/android-1-%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/">探究Android OS 启动流程</a>中，在第八部分我们遗留了app的安装与启动的分析。下面我就我们自身app的安装流程分析一下。</p>
+<h3 id="二，apk的安装方式"><a href="#二，apk的安装方式" class="headerlink" title="二，apk的安装方式"></a>二，apk的安装方式</h3><p>普通用户接触的app安装方式大都是从应用商店一键式安装或者下载app的安装包，然后点击安装，开发人员在调试apk工程中大多会用adb shell 命令安装。在以上几种过程中app的安装界面有的是暴露给用户的，有的是隐藏的，我们就是否显示给用户安装界面把安装方式分为有界面安装和无界面安装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">有界面安装:</div><div class="line">	1.从SD卡点击安装包进程安装</div><div class="line">无界面安装:</div><div class="line">	1.内置app开机安装</div><div class="line">	2.adb或pm命令安装</div></pre></td></tr></table></figure>
+<h3 id="三，Android-OS-如何识别文件"><a href="#三，Android-OS-如何识别文件" class="headerlink" title="三，Android OS 如何识别文件"></a>三，Android OS 如何识别文件</h3><p>今天我们重点分析一下有界面的安装的工程。在探讨安装过程之前，我们要先探讨一下OS是如何识别文件的？OS怎么知道用户点击一个文件该调用什么应用处理点击的文件？</p>
+<p>目前来看，只是根据后缀名，OS通过文件的后缀名，找到对应MIMEType类型。然后在网Intent中设置数据的设置对应的MIMEType，就能通过隐式意图找到相应处理程序。<br>我们看一下OS定义的MIMEType类型，见源码./libcore/luni/src/main/java/libcore/net/MimeUtils.java。<br>我们看一下我们比较熟悉的几个，其他的请自行参考源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">    ....</div><div class="line">    add(<span class="string">"application/zip"</span>, <span class="string">"zip"</span>);</div><div class="line">    add(<span class="string">"application/vnd.android.package-archive"</span>, <span class="string">"apk"</span>);</div><div class="line">    add(<span class="string">"video/mp4"</span>, <span class="string">"mp4"</span>);</div><div class="line">    add(<span class="string">"video/3gpp"</span>, <span class="string">"3gpp"</span>);</div><div class="line">    add(<span class="string">"text/plain"</span>, <span class="string">"txt"</span>);</div><div class="line">    add(<span class="string">"image/gif"</span>, <span class="string">"gif"</span>);</div><div class="line">    add(<span class="string">"image/ico"</span>, <span class="string">"ico"</span>);</div><div class="line">    add(<span class="string">"image/jpeg"</span>, <span class="string">"jpeg"</span>);</div><div class="line">    add(<span class="string">"image/jpeg"</span>, <span class="string">"jpg"</span>);</div><div class="line">    ....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ok，我们知道了对应MIMEType，调用如下代码就可进程一个.apk的安装了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">File apkFile;</div><div class="line">Intent intent = <span class="keyword">new</span> Intent(Intent.ACTION_VIEW);</div><div class="line">intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);</div><div class="line">intent.setDataAndType(Uri.fromFile(apkFile), <span class="string">"application/vnd.android.package-archive"</span>);</div><div class="line">context.startActivity(intent);</div></pre></td></tr></table></figure>
+<p>AMS在处理此隐式意图是，最终其找到com/android/packageinstaller/PackageInstallerActivity.java。我么看一下对应则个Activity的清单文件的注册</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">".PackageInstallerActivity"</span></span></div><div class="line">         <span class="attr">android:configChanges</span>=<span class="string">"orientation|keyboardHidden|screenSize"</span></div><div class="line">         <span class="attr">android:excludeFromRecents</span>=<span class="string">"true"</span>&gt;</div><div class="line">   <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.VIEW"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.INSTALL_PACKAGE"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"file"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:mimeType</span>=<span class="string">"application/vnd.android.package-archive"</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.INSTALL_PACKAGE"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"file"</span>/&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"package"</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">activity</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="三，apk-的安装界面"><a href="#三，apk-的安装界面" class="headerlink" title="三，apk 的安装界面"></a>三，apk 的安装界面</h3><p>我们先看一下PackageInstallerActivity的onCreate()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle icicle)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onCreate(icicle);</div><div class="line">    <span class="comment">// get intent information</span></div><div class="line">    <span class="keyword">final</span> Intent intent = getIntent();</div><div class="line">    <span class="comment">//NOTE(ljs):apk文件的绝对路径例如file:///storage/sdcard/mytest.apk</span></div><div class="line">    mPackageURI = intent.getData();</div><div class="line">    <span class="comment">//FIXME(ljs):这2个URl代表啥意思?</span></div><div class="line">    mOriginatingURI = intent.getParcelableExtra(Intent.EXTRA_ORIGINATING_URI);</div><div class="line">    mReferrerURI = intent.getParcelableExtra(Intent.EXTRA_REFERRER);</div><div class="line">    mPm = getPackageManager();<span class="comment">//ApplicationPackageManager</span></div><div class="line">    <span class="comment">//NOTE(ljs):判断是否从未知来源下载的app</span></div><div class="line">    <span class="keyword">boolean</span> requestFromUnknownSource = isInstallRequestFromUnknownSource(intent);</div><div class="line">    <span class="comment">//NOTE(ljs):安装流分析器</span></div><div class="line">    mInstallFlowAnalytics = <span class="keyword">new</span> InstallFlowAnalytics();</div><div class="line">    mInstallFlowAnalytics.setContext(<span class="keyword">this</span>);</div><div class="line">    mInstallFlowAnalytics.setStartTimestampMillis(SystemClock.elapsedRealtime());</div><div class="line">    mInstallFlowAnalytics.setInstallsFromUnknownSourcesPermitted(isInstallingUnknownAppsAllowed());</div><div class="line">    mInstallFlowAnalytics.setInstallRequestFromUnknownSource(requestFromUnknownSource);</div><div class="line">    mInstallFlowAnalytics.setVerifyAppsEnabled(isVerifyAppsEnabled());</div><div class="line">    mInstallFlowAnalytics.setAppVerifierInstalled(isAppVerifierInstalled());</div><div class="line">    mInstallFlowAnalytics.setPackageUri(mPackageURI.toString());</div><div class="line">    ....</div><div class="line"></div><div class="line">    <span class="comment">//NOTE(ljs):set view</span></div><div class="line">    setContentView(R.layout.install_start);</div><div class="line">    mInstallConfirm = findViewById(R.id.install_confirm_panel);</div><div class="line">    mInstallConfirm.setVisibility(View.INVISIBLE);</div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):</span></div><div class="line">    initiateInstall();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initiateInstall</span><span class="params">()</span> </span>&#123;</div><div class="line">    ....</div><div class="line">    startInstallConfirm();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">startInstallConfirm</span><span class="params">()</span> </span>&#123;</div><div class="line">    ....</div><div class="line">    mInstallConfirm.setVisibility(View.VISIBLE);</div><div class="line">    mOk = (Button) findViewById(R.id.ok_button);</div><div class="line">    mCancel = (Button) findViewById(R.id.cancel_button);</div><div class="line">    <span class="comment">//NOTE(ljs):ok和cancle的监听事件</span></div><div class="line">    mOk.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">    mCancel.setOnClickListener(<span class="keyword">this</span>);</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>大体流程如下：</p>
+<ol>
+<li>从Intent中获取要安装apk或file的路径信息，判断apk的安装方式</li>
+<li>初始化PackageInstallerActivity的UI，给界面的上确认按钮和取消安装事件监听</li>
+</ol>
+<p>我们接下来看一下点击确认按钮发生了什么？</p>
+<h3 id="四，apk-的安装过程。"><a href="#四，apk-的安装过程。" class="headerlink" title="四，apk 的安装过程。"></a>四，apk 的安装过程。</h3><p>我们从源码中发现，当用户点击ok后，启动了InstallAppProgress，并将安装apk的信息传递给它，接着在其initView()方法中通过Binder启动服务PackageManagerService，讲真正的安转过程交给服务来做.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initView</span><span class="params">()</span> </span>&#123;</div><div class="line">    ....</div><div class="line">    pm.installPackageWithVerificationAndEncryption(mPackageURI, observer, installFlags, </div><div class="line">        installerPackageName, verificationParams, <span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后我们看一下ApplicationPackageManager的pm.installPackageWithVerificationAndEncryption()方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    public void installPackageWithVerificationAndEncryption(Uri packageURI, IPackageInstallObserver observer, int flags, String installerPackageName, VerificationParams verificationParams, ContainerEncryptionParams encryptionParams) &#123;</div><div class="line">        //NOTE(ljs):apk的安装从PackageManager的installApk方法开始,</div><div class="line">        //NOTE(ljs):由于PackageManager所对应的binder服务为PackageManagerService</div><div class="line">        //NOTE(ljs):所以,真正的安装过程都在PackageManagerService中完成</div><div class="line">        try &#123;</div><div class="line">            mPM.installPackageWithVerificationAndEncryption(packageURI, observer, flags, installerPackageName, verificationParams, encryptionParams);</div><div class="line">        &#125; catch (RemoteException e) &#123;</div><div class="line">            // Should never happen!</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>下面我么看一下在PackageManagerService服务中究竟安装包是怎么被安装到OS上的？</p>
+<h4 id="4-1-什么是PackageManagerService？"><a href="#4-1-什么是PackageManagerService？" class="headerlink" title="4.1 什么是PackageManagerService？"></a>4.1 什么是PackageManagerService？</h4><p>PackageManagerService主要负责管理系统的Package,包括APK的安装/卸载/信息的查询等等，在SystemServer.initAndLoop()中启动。PackageManagerService的启动非常复杂，涉及到Setting对象、属性系统、Installer系统、PackageHandler、系统权限、<br>、AndroidManifest.xml、Resouce,、FileObserver已经APK的安装包的扫面等等这里我们就不过多描述了，我们只要知道这个 服务管理着apk的安装与卸载就可以了。<br>我们先大体看一下PackageManagerService的main()方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> IPackageManager <span class="title">main</span><span class="params">(Context context, Installer installer, <span class="keyword">boolean</span> factoryTest, <span class="keyword">boolean</span> onlyCore)</span> </span>&#123;</div><div class="line">    PackageManagerService m = <span class="keyword">new</span> PackageManagerService(context, installer, factoryTest, onlyCore);</div><div class="line">    ServiceManager.addService(<span class="string">"package"</span>, m);</div><div class="line">    <span class="keyword">return</span> m;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>创建了一个PackageManagerService服务实例,然后把这个服务添加到ServiceManager中去，主要实现逻辑在PackageManagerService的构造中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">PackageManagerService</span><span class="params">(Context context, Installer installer, <span class="keyword">boolean</span> factoryTest, <span class="keyword">boolean</span> onlyCore)</span> </span>&#123;</div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):1.Setting对象的创建和初始化</span></div><div class="line">    <span class="comment">//1.1构造Settings对象</span></div><div class="line">    mSettings = <span class="keyword">new</span> Settings(context);</div><div class="line">    ....</div><div class="line"></div><div class="line">    <span class="keyword">synchronized</span> (mInstallLock) &#123;</div><div class="line">        <span class="comment">// writer</span></div><div class="line">        <span class="keyword">synchronized</span> (mPackages) &#123;</div><div class="line">            <span class="comment">//NOTE(ljs):3.启动PackageHandler,处理Apk安装请求</span></div><div class="line">            <span class="comment">// 可以看出HandlerThread和PackageHandler分别代表系统通信模型中的Looper线程和Handler处理器,</span></div><div class="line">            <span class="comment">// 其中PackageHandler是PMS的内部类,它的handleMessage()的实现实际调用了doHandleMessage()</span></div><div class="line">            <span class="comment">// mHandlerThread.start()--&gt;Looper.loop()--&gt;PackageHandler.handleMessage()</span></div><div class="line">            <span class="comment">// 这里的作用就是启动mHandlerThread,不断从消息队列中取出来消息,交给PackageHandler处理</span></div><div class="line">            mHandlerThread.start();</div><div class="line">            mHandler = <span class="keyword">new</span> PackageHandler(mHandlerThread.getLooper());</div><div class="line"></div><div class="line">            Watchdog.getInstance().addThread(mHandler, mHandlerThread.getName(), WATCHDOG_TIMEOUT);</div><div class="line"></div><div class="line">            <span class="comment">//NOTE(ljs):4.创建data目录并初始化UserManager</span></div><div class="line">            File dataDir = Environment.getDataDirectory();</div><div class="line">            mAppDataDir = <span class="keyword">new</span> File(dataDir, <span class="string">"data"</span>);</div><div class="line">            mAppInstallDir = <span class="keyword">new</span> File(dataDir, <span class="string">"app"</span>);</div><div class="line">            mAppLibInstallDir = <span class="keyword">new</span> File(dataDir, <span class="string">"app-lib"</span>);</div><div class="line">            mAsecInternalPath = <span class="keyword">new</span> File(dataDir, <span class="string">"app-asec"</span>).getPath();</div><div class="line">            mUserAppDataDir = <span class="keyword">new</span> File(dataDir, <span class="string">"user"</span>);</div><div class="line">            mDrmAppPrivateInstallDir = <span class="keyword">new</span> File(dataDir, <span class="string">"app-private"</span>);</div><div class="line">            <span class="comment">//初始化UserManager</span></div><div class="line">            sUserManager = <span class="keyword">new</span> UserManagerService(context, <span class="keyword">this</span>, mInstallLock, mPackages);</div><div class="line"></div><div class="line">            <span class="comment">//NOTE(ljs):5.解析系统permission和feature信息</span></div><div class="line">            readPermissions();</div><div class="line">            ....</div><div class="line"></div><div class="line">            <span class="comment">//NOTE(ljs):7.启动FileObserver监控Apk文件的目</span></div><div class="line">            <span class="comment">// Find base frameworks (resource packages without code).</span></div><div class="line">            <span class="comment">// 监控 /system/framework/目录  </span></div><div class="line">            mFrameworkInstallObserver = <span class="keyword">new</span> AppDirObserver(frameworkDir.getPath(), OBSERVER_EVENTS, <span class="keyword">true</span>, <span class="keyword">false</span>);</div><div class="line">            mFrameworkInstallObserver.startWatching();</div><div class="line">            <span class="comment">//NOTE(ljs):8.调用scanDirLI()扫描并安装apk文件</span></div><div class="line">            scanDirLI(frameworkDir, PackageParser.PARSE_IS_SYSTEM | PackageParser.PARSE_IS_SYSTEM_DIR | PackageParser.PARSE_IS_PRIVILEGED, scanMode | SCAN_NO_DEX, <span class="number">0</span>);</div><div class="line"></div><div class="line">            mRequiredVerifierPackage = getRequiredVerifierLPr();</div><div class="line">        &#125; <span class="comment">// synchronized (mPackages)</span></div><div class="line">    &#125; <span class="comment">// synchronized (mInstallLock)</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>总结一下如下：</p>
+<ol>
+<li>创建并穿实话Settings对象</li>
+<li>获取系统默认配置</li>
+<li>启动PackageHandler,处理Apk安装请求</li>
+<li>创建data目录并初始化UserManager</li>
+<li>解析系统permission和feature信息</li>
+<li>dexopt优化判断</li>
+<li>启动FileObserver监控Apk文件的目录</li>
+<li>调用scanDirLI()扫描并安装apk包</li>
+<li>调用writeLPr()更新packages.xml/packages-backup.xml等文件</li>
+</ol>
+<h4 id="4-2-apk-的复制过程"><a href="#4-2-apk-的复制过程" class="headerlink" title="4.2 apk 的复制过程"></a>4.2 apk 的复制过程</h4><p>我们跟进一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">installPackageWithVerificationAndEncryption</span><span class="params">(Uri packageURI, IPackageInstallObserver observer, <span class="keyword">int</span> flags, String installerPackageName, VerificationParams verificationParams, ContainerEncryptionParams encryptionParams)</span> </span>&#123;</div><div class="line">    ....</div><div class="line">    <span class="comment">//NOTE(ljs):构造一个消息,类型为INIT_COPY,其obj为一个InstallParams</span></div><div class="line">    <span class="keyword">final</span> Message msg = mHandler.obtainMessage(INIT_COPY);</div><div class="line">    msg.obj = <span class="keyword">new</span> InstallParams(packageURI, observer, filteredFlags, installerPackageName, verificationParams, encryptionParams, user);</div><div class="line">    mHandler.sendMessage(msg);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该方法核心就是最后往PackageHandler发送了一个INIT_COPY消息，来完成apk相关数据的复制过程。</p>
+<p>我们通过代码跟踪可以发现，真正实现apk拷贝的方法是InstallParams的handleStartCopy(),该方法利用PackageInfo获取该apk的安装路径，也就是apk到底是安装在内部存储还是外部存储。然后把带安装的apk复制到/data/app目录中，我们可以看一下这个目录里面有我们要安装的apk，一般会出现如packagename-1.apk的文件。</p>
+<blockquote>
+<p>关于InstallParams的handleStartCopy()里面的具体实现，由于涉及到了MediaContainerService(即MCS服务)，我们这里不展开讲了，只需明白这是个copy过程就可以了。</p>
+</blockquote>
+<h4 id="4-3-apk-解析过程"><a href="#4-3-apk-解析过程" class="headerlink" title="4.3 apk 解析过程"></a>4.3 apk 解析过程</h4><p>由于我们的PMS在构造中创建了AppDirObserver，一直在监视着文件目录结构的变化。在安装包被复制到/data/app后，AppDirObserver监听有文件添加动作，会会用到相应的方法处理事件。我们从源码也能看到 AppDirObserver extends FileObserver，AppDirObserver是个观察者。</p>
+<p>下面我们看一下它处理事件的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(<span class="keyword">int</span> event, String path)</span> </span>&#123;</div><div class="line">    ....</div><div class="line">    p = scanPackageLI(fullPath, flags, SCAN_MONITOR | SCAN_NO_PATHS | SCAN_UPDATE_TIME, System.currentTimeMillis(), UserHandle.ALL);</div><div class="line">    ...</div><div class="line">    <span class="keyword">if</span> (removedPackage != <span class="keyword">null</span>) &#123;</div><div class="line">        Bundle extras = <span class="keyword">new</span> Bundle(<span class="number">1</span>);</div><div class="line">        extras.putInt(Intent.EXTRA_UID, removedAppId);</div><div class="line">        extras.putBoolean(Intent.EXTRA_DATA_REMOVED, <span class="keyword">false</span>);</div><div class="line">        sendPackageBroadcast(Intent.ACTION_PACKAGE_REMOVED, removedPackage, extras, <span class="keyword">null</span>, <span class="keyword">null</span>, removedUsers);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (addedPackage != <span class="keyword">null</span>) &#123;</div><div class="line">        Bundle extras = <span class="keyword">new</span> Bundle(<span class="number">1</span>);</div><div class="line">        extras.putInt(Intent.EXTRA_UID, addedAppId);</div><div class="line">        sendPackageBroadcast(Intent.ACTION_PACKAGE_ADDED, addedPackage, extras, <span class="keyword">null</span>, <span class="keyword">null</span>, addedUsers);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>方法主要是扫描apk安装包，解析apk响应的数据，完成后发送了apk安装和删除广播。</p>
+<p>关于scanPackageLI()方法，主要完成了如下工作:</p>
+<ol>
+<li>如果包名是android，则会做一些特殊处理，这个包名为android的应用是系统内部应用的，其他应用的包名如果叫android则安装会有问题，大家可以试一下</li>
+<li>解析常见的use-feature、shared-userId、use-library标签并保存到成员变量中</li>
+<li>进行签名验证，对应的方法是verifySignaturesLP，验证失败则应用无法安装</li>
+<li>创建应用程序目录/data/data/包名，同时将apk中提取出dex文件并保存到/data/dalvik-cache，把apk当做zip解压就能得到dex文件</li>
+<li>解析AndroidManifest.xml文件，提取出所需信息，包括具有intent-filter的四大组件信息（Activity、Service、BroadcastReceiver、ContentProvider）和声明的系统权限等.</li>
+</ol>
+<p>下面我们看一下解析AndroidManifest.xml的过程，对应的代码见PackageParser的parsePackage()方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> Package <span class="title">parsePackage</span><span class="params">(Resources res, XmlResourceParser parser, <span class="keyword">int</span> flags, String[] outError)</span> <span class="keyword">throws</span> XmlPullParserException, IOException </span>&#123;</div><div class="line">    ....</div><div class="line"></div><div class="line">    <span class="comment">//NOTE(ljs):解析VersionCode 、VersionName、sharedUserId、installLocation、</span></div><div class="line">    TypedArray sa = res.obtainAttributes(attrs, com.android.internal.R.styleable.AndroidManifest);</div><div class="line">    pkg.mVersionCode = sa.getInteger(com.android.internal.R.styleable.AndroidManifest_versionCode, <span class="number">0</span>);</div><div class="line">    pkg.mVersionName = sa.getNonConfigurationString(com.android.internal.R.styleable.AndroidManifest_versionName, <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="comment">//NOTE(ljs):开始解析xml文件的子标签</span></div><div class="line">    <span class="keyword">int</span> outerDepth = parser.getDepth();</div><div class="line">    <span class="keyword">while</span> ((type = parser.next()) != XmlPullParser.END_DOCUMENT &amp;&amp; (type != XmlPullParser.END_TAG || parser.getDepth() &gt; outerDepth)) &#123;</div><div class="line">    ....</div><div class="line">        <span class="comment">//NOTE(ljs):解析application 标签,四大组件在这里注册配置</span></div><div class="line">        <span class="keyword">if</span> (tagName.equals(<span class="string">"application"</span>)) &#123;</div><div class="line">            ...</div><div class="line">        &#125; </div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> pkg;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到利用Pull解析了AndroidManifest.xml各个节点。</p>
+<p>apk安装完成时，系统会将apk对应的package信息写入系统的注册表packages.list和packages.xml中，我们可以看一下;</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#/data/system/packages.list</div><div class="line">...</div><div class="line">com.voole.epg 10038 1 /data/data/com.voole.epg default 3003,1028,1015</div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"com.voole.epg"</span> <span class="attr">codePath</span>=<span class="string">"/data/app/com.voole.epg-1.apk"</span> <span class="attr">nativeLibraryPath</span>=<span class="string">"/data/app-lib/com.voole.epg-1"</span> <span class="attr">flags</span>=<span class="string">"1621574"</span> <span class="attr">ft</span>=<span class="string">"531a2b8"</span> <span class="attr">it</span>=<span class="string">"531ae57"</span> <span class="attr">ut</span>=<span class="string">"531ae57"</span> <span class="attr">version</span>=<span class="string">"29301"</span> <span class="attr">userId</span>=<span class="string">"10038"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">sigs</span> <span class="attr">count</span>=<span class="string">"1"</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">cert</span> <span class="attr">index</span>=<span class="string">"0"</span> <span class="attr">key</span>=<span class="string">"3082030d308201f5a0...."</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">sigs</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">perms</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.READ_EXTERNAL_STORAGE"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.GET_TASKS"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.ACCESS_WIFI_STATE"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.ACCESS_COARSE_LOCATION"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.RESTART_PACKAGES"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.KILL_BACKGROUND_PROCESSES"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.READ_PHONE_STATE"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.SYSTEM_ALERT_WINDOW"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.RECEIVE_BOOT_COMPLETED"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.INTERNET"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.ACCESS_FINE_LOCATION"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.VIBRATE"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.FLASHLIGHT"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.ACCESS_NETWORK_STATE"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"android.permission.WAKE_LOCK"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">perms</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">signing-keyset</span> <span class="attr">identifier</span>=<span class="string">"1"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">package</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="五，再看apk-的安装过程。"><a href="#五，再看apk-的安装过程。" class="headerlink" title="五，再看apk 的安装过程。"></a>五，再看apk 的安装过程。</h3><p>回个我们再看真个apk的安装过程，主要分为如下几部</p>
+<ol>
+<li>拷贝apk文件到指定目录</li>
+<li>解压apk，拷贝文件，创建应用的数据目录</li>
+<li>解析apk的AndroidManifinest.xml文件</li>
+<li>向Launcher应用申请添加创建快捷方式</li>
+</ol>
+<p>我们对比一下我们平时在PC端安装一个.exe文件的过程：</p>
+<ol>
+<li>解压exe文件到系统的临时目录</li>
+<li>拷贝核心文件到指定的程序目录</li>
+<li>写注册表</li>
+<li>添加到开始菜单以及桌面快捷方式</li>
+</ol>
+<p>是不是很相似。这样一对比是不是不用再纠结源码中各种过程的细节问题，整个安装过程一目了然了。</p>
+<p>关于apk的卸载问题，我们对应一下PC端一个应用的卸载，是不是可以可以知道，整个过程就是删除文件，清理注册表的过程，和安装过程是逆向过程。</p>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="http://oh6ghytzv.bkt.clouddn.com/weixin-pay.png" alt="luojunsheng WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="http://oh6ghytzv.bkt.clouddn.com/ali-pay.jpg" alt="luojunsheng Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/Framework/" rel="tag"># Framework</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/28/android-4-探究 Android 属性服务/" rel="next" title="探究 Android 属性服务">
+                <i class="fa fa-chevron-left"></i> 探究 Android 属性服务
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/11/30/android-5-探究 Android  apk 安装过程/" data-title="探究 Android apk 安装过程" data-url="http://junshengluo.com/2016/11/30/android-5-探究 Android  apk 安装过程/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="https://avatars3.githubusercontent.com/u/10328555?v=3&s=460" alt="luojunsheng">
+          <p class="site-author-name" itemprop="name">luojunsheng</p>
+          <p class="site-description motion-element" itemprop="description">学习总结 思考感悟 知识管理</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/junshengluo" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究-Android-apk-安装过程"><span class="nav-text">探究 Android apk 安装过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，前言"><span class="nav-text">一，前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，apk的安装方式"><span class="nav-text">二，apk的安装方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，Android-OS-如何识别文件"><span class="nav-text">三，Android OS 如何识别文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，apk-的安装界面"><span class="nav-text">三，apk 的安装界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四，apk-的安装过程。"><span class="nav-text">四，apk 的安装过程。</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-什么是PackageManagerService？"><span class="nav-text">4.1 什么是PackageManagerService？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-apk-的复制过程"><span class="nav-text">4.2 apk 的复制过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-apk-解析过程"><span class="nav-text">4.3 apk 解析过程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五，再看apk-的安装过程。"><span class="nav-text">五，再看apk 的安装过程。</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">luojunsheng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+<div class="theme-info">
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260864662'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1260864662%26online%3D2' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"junshengluo"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("BleqWuRF0pGBxTnuwj3jPNC1-gzGzoHsz", "imaApFCh0H5f6jz7WJ532AM7");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+
+</body>
+</html>
