@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>http://junshengluo.com/2016/11/24/android-1-%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
+    <lastmod>2016-11-30T08:53:58.000Z</lastmod>
+    <data>
+        <display>
+        <title>探究Android OS 启动流程</title>
+        <pubTime>2016-11-24T02:40:00.000Z</pubTime>
+        
+        <tag>android</tag>
+         
+        <tag>Framework</tag>
+         
+         
+           
+             
+              <breadCrumb title="android" url="http://junshengluo.com/categories/android/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://junshengluo.com/2016/11/30/android-5-%E6%8E%A2%E7%A9%B6%20Android%20%20apk%20%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B/</loc>
     <lastmod>2016-11-30T08:52:09.000Z</lastmod>
     <data>
@@ -32,28 +54,6 @@
         <display>
         <title>探究 Android 属性服务</title>
         <pubTime>2016-11-28T02:00:00.000Z</pubTime>
-        
-        <tag>android</tag>
-         
-        <tag>Framework</tag>
-         
-         
-           
-             
-              <breadCrumb title="android" url="http://junshengluo.com/categories/android/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://junshengluo.com/2016/11/24/android-1-%E6%8E%A2%E7%A9%B6Android%20OS%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</loc>
-    <lastmod>2016-11-28T06:36:33.000Z</lastmod>
-    <data>
-        <display>
-        <title>探究Android OS 启动流程</title>
-        <pubTime>2016-11-24T02:40:00.000Z</pubTime>
         
         <tag>android</tag>
          
