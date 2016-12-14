@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="hexo,">
+  <meta name="keywords" content="android,Framework,">
 
 
 
@@ -86,61 +86,25 @@
 
 
 
-<meta name="description" content="##利用Github Pages和Hexo搭建个人博客
-###一,安装git
-###二,注册github账号
-###三,安装node.js
+<meta name="description" content="探究 Android 的事件机制一，前言最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句熟悉Android事件分发机制，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。探究Android OS的事件机制主要从以下几个问题着手:
 
-node.js中文网站
-node.js官网
-
-###四,了解Hexo
-
-Hexo官方文档
-
-###五,安装Hexo
-12# 使用 npm 安装 Hexonpm install -g hexo-cli
-安装查看一下版本:
-1hexo version或 hexo">
+Android中的事件是什么?
+Android中,一个事件InputEvent是怎么">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何搭建github pages+hexo博客">
-<meta property="og:url" content="http://junshengluo.com/2016/11/23/hexo-如何搭建github-pages-hexo-博客/index.html">
+<meta property="og:title" content="探究 Android  的事件机制">
+<meta property="og:url" content="http://junshengluo.com/2016/12/14/android-6-探究 Android 事件机制/index.html">
 <meta property="og:site_name" content="luojunsheng's blog">
-<meta property="og:description" content="##利用Github Pages和Hexo搭建个人博客
-###一,安装git
-###二,注册github账号
-###三,安装node.js
+<meta property="og:description" content="探究 Android 的事件机制一，前言最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句熟悉Android事件分发机制，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。探究Android OS的事件机制主要从以下几个问题着手:
 
-node.js中文网站
-node.js官网
-
-###四,了解Hexo
-
-Hexo官方文档
-
-###五,安装Hexo
-12# 使用 npm 安装 Hexonpm install -g hexo-cli
-安装查看一下版本:
-1hexo version或 hexo">
-<meta property="og:updated_time" content="2016-12-14T10:09:05.000Z">
+Android中的事件是什么?
+Android中,一个事件InputEvent是怎么">
+<meta property="og:updated_time" content="2016-12-14T10:23:46.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何搭建github pages+hexo博客">
-<meta name="twitter:description" content="##利用Github Pages和Hexo搭建个人博客
-###一,安装git
-###二,注册github账号
-###三,安装node.js
+<meta name="twitter:title" content="探究 Android  的事件机制">
+<meta name="twitter:description" content="探究 Android 的事件机制一，前言最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句熟悉Android事件分发机制，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。探究Android OS的事件机制主要从以下几个问题着手:
 
-node.js中文网站
-node.js官网
-
-###四,了解Hexo
-
-Hexo官方文档
-
-###五,安装Hexo
-12# 使用 npm 安装 Hexonpm install -g hexo-cli
-安装查看一下版本:
-1hexo version或 hexo">
+Android中的事件是什么?
+Android中,一个事件InputEvent是怎么">
 
 
 
@@ -168,13 +132,13 @@ Hexo官方文档
 
 
 
-  <link rel="canonical" href="http://junshengluo.com/2016/11/23/hexo-如何搭建github-pages-hexo-博客/">
+  <link rel="canonical" href="http://junshengluo.com/2016/12/14/android-6-探究 Android 事件机制/">
 
 
 
 
 
-  <title> 如何搭建github pages+hexo博客 | luojunsheng's blog </title>
+  <title> 探究 Android  的事件机制 | luojunsheng's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -328,7 +292,7 @@ Hexo官方文档
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/11/23/hexo-如何搭建github-pages-hexo-博客/">
+  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/12/14/android-6-探究 Android 事件机制/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="luojunsheng">
@@ -352,7 +316,7 @@ Hexo官方文档
             
             
               
-                如何搭建github pages+hexo博客
+                探究 Android  的事件机制
               
             
           </h1>
@@ -365,8 +329,8 @@ Hexo官方文档
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-23T21:48:20+08:00">
-                2016-11-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-14T17:00:00+08:00">
+                2016-12-14
               </time>
             
 
@@ -384,8 +348,8 @@ Hexo官方文档
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hexo/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo</span>
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
                   </a>
                 </span>
 
@@ -399,8 +363,8 @@ Hexo官方文档
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/11/23/hexo-如何搭建github-pages-hexo-博客/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/23/hexo-如何搭建github-pages-hexo-博客/" itemprop="commentCount"></span>
+                <a href="/2016/12/14/android-6-探究 Android 事件机制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/14/android-6-探究 Android 事件机制/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -410,7 +374,7 @@ Hexo官方文档
 
           
           
-             <span id="/2016/11/23/hexo-如何搭建github-pages-hexo-博客/" class="leancloud_visitors" data-flag-title="如何搭建github pages+hexo博客">
+             <span id="/2016/12/14/android-6-探究 Android 事件机制/" class="leancloud_visitors" data-flag-title="探究 Android  的事件机制">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -435,59 +399,42 @@ Hexo官方文档
       
 
       
-        <p>##利用Github Pages和Hexo搭建个人博客</p>
-<p>###一,安装git</p>
-<p>###二,注册github账号</p>
-<p>###三,安装node.js</p>
-<ul>
-<li><a href="http://nodejs.cn/" target="_blank" rel="external">node.js中文网站</a></li>
-<li><a href="https://nodejs.org/en/" target="_blank" rel="external">node.js官网</a></li>
-</ul>
-<p>###四,了解Hexo</p>
+        <h2 id="探究-Android-的事件机制"><a href="#探究-Android-的事件机制" class="headerlink" title="探究 Android 的事件机制"></a>探究 Android 的事件机制</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句<strong>熟悉Android事件分发机制</strong>，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。<br>探究Android OS的事件机制主要从以下几个问题着手:</p>
 <ol>
-<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">Hexo官方文档</a></li>
+<li>Android中的事件是什么?</li>
+<li>Android中,一个事件InputEvent是怎么产生的?</li>
+<li>监控系统事件的InputManager是如何启动的?</li>
+<li>一个应用程序窗口(activity)是如何接收到事件消息的?</li>
+<li>在应用层，一个事件消息是如何传递？</li>
+<li>….</li>
 </ol>
-<p>###五,安装Hexo</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 使用 npm 安装 Hexo</div><div class="line">npm install -g hexo-cli</div></pre></td></tr></table></figure>
-<p>安装查看一下版本:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo version或 hexo v</div></pre></td></tr></table></figure>
-<p>###五,使用hexo创建项目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">cd ~/github</div><div class="line">hexo init hexo  #执行init命令初始化到你指定的hexo目录</div><div class="line">cd hexo </div><div class="line">npm install     #install before start blogging</div><div class="line">hexo generate   #自动根据当前目录下文件,生成静态网页</div><div class="line">hexo server     #运行本地服务</div><div class="line">hexo new &quot;postName&quot; #新建文章</div><div class="line">hexo new page &quot;pageName&quot; #新建页面</div></pre></td></tr></table></figure></p>
-<p>Terminal 提示如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">bogon:hexo luojunsheng$ hexo s</div><div class="line">INFO  Start processing</div><div class="line">INFO  Hexo is running at http://localhost:4000/. Press Ctrl+C to stop</div></pre></td></tr></table></figure>
-<p>在本地跑一下hexo,在浏览器输入:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:4000/</div></pre></td></tr></table></figure>
-<p>到此,我们在网页中看到了我们的blog(本地运行).</p>
-<p>###六,添加部署代码<br>在站点的-config.yml文件新增字段如下字段,讲Deployment站点部署到github</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">deploy:</div><div class="line">   type: git </div><div class="line">   repository: https://github.com/username/username.github.io.git</div><div class="line">   branch: master</div></pre></td></tr></table></figure>
-<p>我的github为<a href="https://github.com/junshengluo/junshengluo.github.io" target="_blank" rel="external">https://github.com/junshengluo/junshengluo.github.io</a><br>然后部署</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ hexo g</div><div class="line">$ hexo d</div><div class="line">或者</div><div class="line">hexo g -d</div></pre></td></tr></table></figure>
-<p>如果出现下面的错误:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Deployer not found: git</div></pre></td></tr></table></figure>
-<p>请运行如下命令:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure>
-<p>然后访问浏览器:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">username.github.io</div></pre></td></tr></table></figure></p>
-<p>###7,购买域名</p>
-<ul>
-<li><a href="https://www.aliyun.com/" target="_blank" rel="external">阿里云</a></li>
-<li><a href="https://www.dnspod.cn/" target="_blank" rel="external">dnspod</a></li>
-<li><a href="https://sg.godaddy.com/" target="_blank" rel="external">godaddy</a></li>
-</ul>
-<p>###8,域名解析,讲域名指向github Pages</p>
-<ol>
-<li><p>在source文件夹中新建一个CNAME文件(无后缀名),然后用文本编辑器打开,在首行添加你的网站域名,如<a href="http://xxxx.com,注意前面没有http://,也没有www" target="_blank" rel="external">http://xxxx.com,注意前面没有http://,也没有www</a>.</p>
-</li>
-<li><p>在域名解析提供商</p>
-<ul>
-<li>先添加一个CNAME,主机记录写@,后面记录值写上你的<a href="http://xxxx.github.io" target="_blank" rel="external">http://xxxx.github.io</a></li>
-<li>再添加一个CNAME,主机记录写www,后面记录值也是<a href="http://xxxx.github.io" target="_blank" rel="external">http://xxxx.github.io</a></li>
-</ul>
-</li>
-</ol>
-<p>这样别人用www和不用www都能访问你的网站.<br>也可以使用A记录,对应的记录值位github page的ip</p>
-<ol>
-<li>等1分钟左右,刷新浏览器    </li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@        A        192.30.252.153</div><div class="line">@        A        192.30.252.154</div><div class="line">@        CNAME    username.github.io</div><div class="line">www      CNAME    username.github.io.</div></pre></td></tr></table></figure>
+<p>带着以上几个问题，我们就可以大体理解了Android 的事件机制。</p>
+<h3 id="二，准备工作"><a href="#二，准备工作" class="headerlink" title="二，准备工作"></a>二，准备工作</h3><p>在理解Android 的事件机制之前，需要对一些准备，即整个事件机制涉及到哪些类和一些类的作用。</p>
+<h4 id="2-1-事件机制涉及到哪些类？"><a href="#2-1-事件机制涉及到哪些类？" class="headerlink" title="2.1 事件机制涉及到哪些类？"></a>2.1 事件机制涉及到哪些类？</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">===Native层</div><div class="line">./frameworks/base/services/input/InputManager.cpp</div><div class="line">./frameworks/base/services/input/InputManager.h</div><div class="line">./frameworks/base/services/input/InputReader.cpp</div><div class="line">./frameworks/base/services/input/InputReader.h</div><div class="line">./frameworks/base/services/input/InputDispatcher.cpp</div><div class="line">./frameworks/base/services/input/InputDispatcher.h</div><div class="line">./frameworks/base/services/input/EventHub.cpp</div><div class="line">./frameworks/base/services/input/EventHub.h</div><div class="line">./frameworks/base/services/input/InputListener.cpp</div><div class="line">===jni层</div><div class="line">./frameworks/base/services/jni/com_android_server_input_InputManagerService.cpp</div><div class="line">===java层</div><div class="line">./frameworks/base/core/java/android/view/InputEvent.java</div><div class="line">./frameworks/base/core/java/android/view/KeyEvent.java</div><div class="line">./frameworks/base/core/java/android/view/MotionEvent.java</div><div class="line">./frameworks/base/services/java/com/android/server/wm/WindowManagerService.java</div><div class="line">./frameworks/base/services/java/com/android/server/input/InputManagerService.java</div></pre></td></tr></table></figure>
+<p>其中还涉及到设备节点文件，主要一下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/dev/input/event0</div><div class="line">/dev/input/event1</div><div class="line">/dev/input/event2</div><div class="line">/dev/input/event3</div><div class="line">/dev/input/event4</div><div class="line">/dev/input/event5</div></pre></td></tr></table></figure>
+<p>与event对应的相关设备信息位于/proc/bus/input/devices，我们可以利用如下命令看一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /proc/bus/input/devices</div></pre></td></tr></table></figure>
+<p>也可以通过<strong>getevent</strong>命令看一下设备节点文件响应事件时的一下输出日志:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">shell@mako:/ # cat /proc/bus/input/devices </div><div class="line">add device 1: /dev/input/event0</div><div class="line">  name:     "pmic8xxx_pwrkey"      	####电源按键</div><div class="line">add device 2: /dev/input/event1</div><div class="line">  name:     "keypad_8064"           ####在手机上按音量键会响应</div><div class="line">add device 3: /dev/input/event4</div><div class="line">  name:     "apq8064-tabla-snd-card Headset Jack"  ####?????</div><div class="line">add device 4: /dev/input/event3</div><div class="line">  name:     "apq8064-tabla-snd-card Button Jack"  ####?????</div><div class="line">add device 5: /dev/input/event5</div><div class="line">  name:     "hs_detect"             ####?????</div><div class="line">add device 6: /dev/input/event2</div><div class="line">  name:     "touch_dev" 			   ####touch之类事件(包括软键盘的触摸)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>大体理解一下这些设备文件，每个设备中设备节点文件/dev/input/eventX会有所不同，具体就不深究每个设备文件节点响应什么类型的事件了，如果项目上有需求的话在细细的研究补全吧。</p>
+</blockquote>
+<h4 id="2-2-类作用说明"><a href="#2-2-类作用说明" class="headerlink" title="2.2 类作用说明"></a>2.2 类作用说明</h4><p>InputManager：统一管理系统的InputEvent事件的管理器<br>InputEvent：事件在java层的描述<br>KeyEvent：键盘事件<br>MotionEvent：屏幕触摸事件<br>InputReader：监控系统事件的发生<br>InputDispatcher：把事件分发给系统当前激活的应用程序窗口处理<br>EventHub：是输入设备的控制中心,它直接与input driver打交道;负责处理输入设备的增减,查询,输入事件的处理并向上层提供getEvents()接口接收事件<br>WindowManagerService：窗口管理系统服务，系统消息的收集与分发等</p>
+<h3 id="三，Android中的事件是什么"><a href="#三，Android中的事件是什么" class="headerlink" title="三，Android中的事件是什么?"></a>三，Android中的事件是什么?</h3><p>用户与Android设备交互式时，会产生的各种事件，如用户用遥控器操作机顶盒发生的键盘事件，或者用户触摸Android手机屏幕发生的触摸事件等，我们把这些事件统称为人机交互时的用户输入事件InputEvent。<br>对于InputEvent，Android分为2大类:<br>一种是<strong>KeyEvent</strong>,即键盘事件,来自Android设备的软件键盘或者外设(遥控器);<br>一种是<strong>MotionEvent</strong>,即屏幕触摸事件,来自用户触摸屏幕的事件;</p>
+<blockquote>
+<p>InputEvent只是一种描述，或者说是java层的一种描述，直接可以理解为用户输入到设备中的事件。</p>
+</blockquote>
+<h3 id="四，Android中中一个事件-InputEvent-是怎么产生的"><a href="#四，Android中中一个事件-InputEvent-是怎么产生的" class="headerlink" title="四，Android中中一个事件(InputEvent)是怎么产生的?"></a>四，Android中中一个事件(InputEvent)是怎么产生的?</h3><p>一个事件的产生肯定需要用户的交互，也就是说，只有当用户触摸屏幕或按下某个按键之类的操作之后系统才能产生一个事件。<br>参考linux输入子系统，我们可以大体理解为:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">在用户与系统交互时，Android里面的设备节点文件(/dev/input/eventX)，</div><div class="line">通过输入子系统设备驱动层和核心层把硬件产生的事件转换为事件数据，</div><div class="line">然后Android系统中的InputReader就可以读取设备节点文件来获取一个事件。</div></pre></td></tr></table></figure>
+<p>关于linux输入子系统具体可以参考<a href="http://blog.chinaunix.net/uid-23381466-id-3875934.html" target="_blank" rel="external">driver:Linux设备模型之input子系统详解</a>。</p>
+<h3 id="五，监控系统事件的InputManager是如何启动的"><a href="#五，监控系统事件的InputManager是如何启动的" class="headerlink" title="五，监控系统事件的InputManager是如何启动的?"></a>五，监控系统事件的InputManager是如何启动的?</h3><blockquote>
+<p>TODO这里只大体发一下流程，具体到里面的代码细节和逻辑会在其他博客中说明</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">--&gt;SystemServer.main()</div><div class="line">--&gt;ServerThread.initAndLoop():传说中的init2():开启Android的Framework世界</div><div class="line">--&gt;通过构造创建InputManagerService</div><div class="line">--&gt;InputManagerService.nativeInit()</div><div class="line">--&gt;com_android_server_input_InputManagerService.cpp.nativeInit()</div><div class="line">--&gt;创建NativeInputManager</div><div class="line">--&gt;在NativeInputManager构造中创建InputManager</div><div class="line">--&gt;在InputManager构造中创建InputReader,InputDispatcher,并创建相应的reader和dispatcher线程</div><div class="line">--&gt;InputManagerService.start()</div><div class="line">--&gt;InputManagerService.nativeStart(<span class="keyword">int</span> mPtr);</div><div class="line">--&gt;com_android_server_input_InputManagerService.cpp.nativeStart(JNIEnv* env, jclass clazz, jint ptr)</div><div class="line">--&gt;InputManager.start()</div><div class="line">--&gt;启动InputReaderThread和InputDispatcherThread线程</div><div class="line">    --&gt;InputDispatcherThread::threadLoop()</div><div class="line">        --&gt;InputDispatcher-&gt;dispatchOnce()</div><div class="line">    --&gt;InputDispatcherThread::threadLoop()</div><div class="line">        --&gt;InputReader-&gt;loopOnce()</div></pre></td></tr></table></figure>
+<h3 id="六，一个应用程序窗口-activity-是如何接收到键盘消息的"><a href="#六，一个应用程序窗口-activity-是如何接收到键盘消息的" class="headerlink" title="六，一个应用程序窗口(activity)是如何接收到键盘消息的?"></a>六，一个应用程序窗口(activity)是如何接收到键盘消息的?</h3><blockquote>
+<p>TODO 具体到里面的代码细节和逻辑会在其他博客中说明(后续补上)</p>
+</blockquote>
       
     </div>
 
@@ -531,7 +478,9 @@ Hexo官方文档
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag"># hexo</a>
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/Framework/" rel="tag"># Framework</a>
           
         </div>
       
@@ -540,8 +489,8 @@ Hexo官方文档
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/23/wordpress-如何让wordpress支持代码缩进和高亮/" rel="next" title="如何让wordpress支持代码缩进和高亮">
-                <i class="fa fa-chevron-left"></i> 如何让wordpress支持代码缩进和高亮
+              <a href="/2016/11/30/android-5-探究 Android  apk 安装过程/" rel="next" title="探究 Android apk 安装过程">
+                <i class="fa fa-chevron-left"></i> 探究 Android apk 安装过程
               </a>
             
           </div>
@@ -550,8 +499,8 @@ Hexo官方文档
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/11/23/hexo-安装插件/" rel="prev" title="hexo 安装插件">
-                hexo 安装插件 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/" rel="prev" title="探究Android事件机制之InputManager的启动过程">
+                探究Android事件机制之InputManager的启动过程 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -601,7 +550,7 @@ Hexo官方文档
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/11/23/hexo-如何搭建github-pages-hexo-博客/" data-title="如何搭建github pages+hexo博客" data-url="http://junshengluo.com/2016/11/23/hexo-如何搭建github-pages-hexo-博客/">
+      <div class="ds-thread" data-thread-key="2016/12/14/android-6-探究 Android 事件机制/" data-title="探究 Android  的事件机制" data-url="http://junshengluo.com/2016/12/14/android-6-探究 Android 事件机制/">
       </div>
     
   </div>
@@ -625,8 +574,17 @@ Hexo官方文档
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="https://avatars3.githubusercontent.com/u/10328555?v=3&s=460" alt="luojunsheng">
           <p class="site-author-name" itemprop="name">luojunsheng</p>
@@ -695,6 +653,22 @@ Hexo官方文档
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究-Android-的事件机制"><span class="nav-text">探究 Android 的事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，前言"><span class="nav-text">一，前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，准备工作"><span class="nav-text">二，准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-事件机制涉及到哪些类？"><span class="nav-text">2.1 事件机制涉及到哪些类？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-类作用说明"><span class="nav-text">2.2 类作用说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，Android中的事件是什么"><span class="nav-text">三，Android中的事件是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四，Android中中一个事件-InputEvent-是怎么产生的"><span class="nav-text">四，Android中中一个事件(InputEvent)是怎么产生的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五，监控系统事件的InputManager是如何启动的"><span class="nav-text">五，监控系统事件的InputManager是如何启动的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六，一个应用程序窗口-activity-是如何接收到键盘消息的"><span class="nav-text">六，一个应用程序窗口(activity)是如何接收到键盘消息的?</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>

@@ -86,25 +86,19 @@
 
 
 
-<meta name="description" content="探究 Android 的事件机制一，前言最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句熟悉Android事件分发机制，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。探究Android OS的事件机制主要从以下几个问题着手:
-
-Android中的事件是什么?
-Android中,一个事件InputEvent是怎么">
+<meta name="description" content="探究Android事件机制之InputManager的启动过程一，监控系统事件的InputManager是如何启动的?在前文中我们大体说了一下InputManager的启动后流程，这里再次贴一下。接下来我们细细的研究这个流程中的细节。
+1234567891011121314151617--&amp;gt;SystemServer.main()--&amp;gt;ServerThread.initAndLoop()">
 <meta property="og:type" content="article">
-<meta property="og:title" content="探究 Android  的事件机制">
-<meta property="og:url" content="http://junshengluo.com/2016/12/14/android-6-探究 Android  的事件机制/index.html">
+<meta property="og:title" content="探究Android事件机制之InputManager的启动过程">
+<meta property="og:url" content="http://junshengluo.com/2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/index.html">
 <meta property="og:site_name" content="luojunsheng's blog">
-<meta property="og:description" content="探究 Android 的事件机制一，前言最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句熟悉Android事件分发机制，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。探究Android OS的事件机制主要从以下几个问题着手:
-
-Android中的事件是什么?
-Android中,一个事件InputEvent是怎么">
-<meta property="og:updated_time" content="2016-12-14T10:23:46.000Z">
+<meta property="og:description" content="探究Android事件机制之InputManager的启动过程一，监控系统事件的InputManager是如何启动的?在前文中我们大体说了一下InputManager的启动后流程，这里再次贴一下。接下来我们细细的研究这个流程中的细节。
+1234567891011121314151617--&amp;gt;SystemServer.main()--&amp;gt;ServerThread.initAndLoop()">
+<meta property="og:updated_time" content="2016-12-14T10:46:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="探究 Android  的事件机制">
-<meta name="twitter:description" content="探究 Android 的事件机制一，前言最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句熟悉Android事件分发机制，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。探究Android OS的事件机制主要从以下几个问题着手:
-
-Android中的事件是什么?
-Android中,一个事件InputEvent是怎么">
+<meta name="twitter:title" content="探究Android事件机制之InputManager的启动过程">
+<meta name="twitter:description" content="探究Android事件机制之InputManager的启动过程一，监控系统事件的InputManager是如何启动的?在前文中我们大体说了一下InputManager的启动后流程，这里再次贴一下。接下来我们细细的研究这个流程中的细节。
+1234567891011121314151617--&amp;gt;SystemServer.main()--&amp;gt;ServerThread.initAndLoop()">
 
 
 
@@ -132,13 +126,13 @@ Android中,一个事件InputEvent是怎么">
 
 
 
-  <link rel="canonical" href="http://junshengluo.com/2016/12/14/android-6-探究 Android  的事件机制/">
+  <link rel="canonical" href="http://junshengluo.com/2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/">
 
 
 
 
 
-  <title> 探究 Android  的事件机制 | luojunsheng's blog </title>
+  <title> 探究Android事件机制之InputManager的启动过程 | luojunsheng's blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +286,7 @@ Android中,一个事件InputEvent是怎么">
   
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/12/14/android-6-探究 Android  的事件机制/">
+  <link itemprop="mainEntityOfPage" href="http://junshengluo.com/2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="luojunsheng">
@@ -316,7 +310,7 @@ Android中,一个事件InputEvent是怎么">
             
             
               
-                探究 Android  的事件机制
+                探究Android事件机制之InputManager的启动过程
               
             
           </h1>
@@ -363,8 +357,8 @@ Android中,一个事件InputEvent是怎么">
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/14/android-6-探究 Android  的事件机制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/14/android-6-探究 Android  的事件机制/" itemprop="commentCount"></span>
+                <a href="/2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -374,7 +368,7 @@ Android中,一个事件InputEvent是怎么">
 
           
           
-             <span id="/2016/12/14/android-6-探究 Android  的事件机制/" class="leancloud_visitors" data-flag-title="探究 Android  的事件机制">
+             <span id="/2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/" class="leancloud_visitors" data-flag-title="探究Android事件机制之InputManager的启动过程">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -399,42 +393,9 @@ Android中,一个事件InputEvent是怎么">
       
 
       
-        <h2 id="探究-Android-的事件机制"><a href="#探究-Android-的事件机制" class="headerlink" title="探究 Android 的事件机制"></a>探究 Android 的事件机制</h2><h3 id="一，前言"><a href="#一，前言" class="headerlink" title="一，前言"></a>一，前言</h3><p>最近着手探究Android 事件机制，说来惭愧，源于看到自己的简历上豁然写着一句<strong>熟悉Android事件分发机制</strong>，突然发现对于事件机制还停留在事件机制传递时的消耗问题上，对于Android OS中的事件模式没有概念。<br>探究Android OS的事件机制主要从以下几个问题着手:</p>
-<ol>
-<li>Android中的事件是什么?</li>
-<li>Android中,一个事件InputEvent是怎么产生的?</li>
-<li>监控系统事件的InputManager是如何启动的?</li>
-<li>一个应用程序窗口(activity)是如何接收到事件消息的?</li>
-<li>在应用层，一个事件消息是如何传递？</li>
-<li>….</li>
-</ol>
-<p>带着以上几个问题，我们就可以大体理解了Android 的事件机制。</p>
-<h3 id="二，准备工作"><a href="#二，准备工作" class="headerlink" title="二，准备工作"></a>二，准备工作</h3><p>在理解Android 的事件机制之前，需要对一些准备，即整个事件机制涉及到哪些类和一些类的作用。</p>
-<h4 id="2-1-事件机制涉及到哪些类？"><a href="#2-1-事件机制涉及到哪些类？" class="headerlink" title="2.1 事件机制涉及到哪些类？"></a>2.1 事件机制涉及到哪些类？</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">===Native层</div><div class="line">./frameworks/base/services/input/InputManager.cpp</div><div class="line">./frameworks/base/services/input/InputManager.h</div><div class="line">./frameworks/base/services/input/InputReader.cpp</div><div class="line">./frameworks/base/services/input/InputReader.h</div><div class="line">./frameworks/base/services/input/InputDispatcher.cpp</div><div class="line">./frameworks/base/services/input/InputDispatcher.h</div><div class="line">./frameworks/base/services/input/EventHub.cpp</div><div class="line">./frameworks/base/services/input/EventHub.h</div><div class="line">./frameworks/base/services/input/InputListener.cpp</div><div class="line">===jni层</div><div class="line">./frameworks/base/services/jni/com_android_server_input_InputManagerService.cpp</div><div class="line">===java层</div><div class="line">./frameworks/base/core/java/android/view/InputEvent.java</div><div class="line">./frameworks/base/core/java/android/view/KeyEvent.java</div><div class="line">./frameworks/base/core/java/android/view/MotionEvent.java</div><div class="line">./frameworks/base/services/java/com/android/server/wm/WindowManagerService.java</div><div class="line">./frameworks/base/services/java/com/android/server/input/InputManagerService.java</div></pre></td></tr></table></figure>
-<p>其中还涉及到设备节点文件，主要一下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/dev/input/event0</div><div class="line">/dev/input/event1</div><div class="line">/dev/input/event2</div><div class="line">/dev/input/event3</div><div class="line">/dev/input/event4</div><div class="line">/dev/input/event5</div></pre></td></tr></table></figure>
-<p>与event对应的相关设备信息位于/proc/bus/input/devices，我们可以利用如下命令看一下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cat /proc/bus/input/devices</div></pre></td></tr></table></figure>
-<p>也可以通过<strong>getevent</strong>命令看一下设备节点文件响应事件时的一下输出日志:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">shell@mako:/ # cat /proc/bus/input/devices </div><div class="line">add device 1: /dev/input/event0</div><div class="line">  name:     "pmic8xxx_pwrkey"      	####电源按键</div><div class="line">add device 2: /dev/input/event1</div><div class="line">  name:     "keypad_8064"           ####在手机上按音量键会响应</div><div class="line">add device 3: /dev/input/event4</div><div class="line">  name:     "apq8064-tabla-snd-card Headset Jack"  ####?????</div><div class="line">add device 4: /dev/input/event3</div><div class="line">  name:     "apq8064-tabla-snd-card Button Jack"  ####?????</div><div class="line">add device 5: /dev/input/event5</div><div class="line">  name:     "hs_detect"             ####?????</div><div class="line">add device 6: /dev/input/event2</div><div class="line">  name:     "touch_dev" 			   ####touch之类事件(包括软键盘的触摸)</div></pre></td></tr></table></figure>
-<blockquote>
-<p>大体理解一下这些设备文件，每个设备中设备节点文件/dev/input/eventX会有所不同，具体就不深究每个设备文件节点响应什么类型的事件了，如果项目上有需求的话在细细的研究补全吧。</p>
-</blockquote>
-<h4 id="2-2-类作用说明"><a href="#2-2-类作用说明" class="headerlink" title="2.2 类作用说明"></a>2.2 类作用说明</h4><p>InputManager：统一管理系统的InputEvent事件的管理器<br>InputEvent：事件在java层的描述<br>KeyEvent：键盘事件<br>MotionEvent：屏幕触摸事件<br>InputReader：监控系统事件的发生<br>InputDispatcher：把事件分发给系统当前激活的应用程序窗口处理<br>EventHub：是输入设备的控制中心,它直接与input driver打交道;负责处理输入设备的增减,查询,输入事件的处理并向上层提供getEvents()接口接收事件<br>WindowManagerService：窗口管理系统服务，系统消息的收集与分发等</p>
-<h3 id="三，Android中的事件是什么"><a href="#三，Android中的事件是什么" class="headerlink" title="三，Android中的事件是什么?"></a>三，Android中的事件是什么?</h3><p>用户与Android设备交互式时，会产生的各种事件，如用户用遥控器操作机顶盒发生的键盘事件，或者用户触摸Android手机屏幕发生的触摸事件等，我们把这些事件统称为人机交互时的用户输入事件InputEvent。<br>对于InputEvent，Android分为2大类:<br>一种是<strong>KeyEvent</strong>,即键盘事件,来自Android设备的软件键盘或者外设(遥控器);<br>一种是<strong>MotionEvent</strong>,即屏幕触摸事件,来自用户触摸屏幕的事件;</p>
-<blockquote>
-<p>InputEvent只是一种描述，或者说是java层的一种描述，直接可以理解为用户输入到设备中的事件。</p>
-</blockquote>
-<h3 id="四，Android中中一个事件-InputEvent-是怎么产生的"><a href="#四，Android中中一个事件-InputEvent-是怎么产生的" class="headerlink" title="四，Android中中一个事件(InputEvent)是怎么产生的?"></a>四，Android中中一个事件(InputEvent)是怎么产生的?</h3><p>一个事件的产生肯定需要用户的交互，也就是说，只有当用户触摸屏幕或按下某个按键之类的操作之后系统才能产生一个事件。<br>参考linux输入子系统，我们可以大体理解为:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">在用户与系统交互时，Android里面的设备节点文件(/dev/input/eventX)，</div><div class="line">通过输入子系统设备驱动层和核心层把硬件产生的事件转换为事件数据，</div><div class="line">然后Android系统中的InputReader就可以读取设备节点文件来获取一个事件。</div></pre></td></tr></table></figure>
-<p>关于linux输入子系统具体可以参考<a href="http://blog.chinaunix.net/uid-23381466-id-3875934.html" target="_blank" rel="external">driver:Linux设备模型之input子系统详解</a>。</p>
-<h3 id="五，监控系统事件的InputManager是如何启动的"><a href="#五，监控系统事件的InputManager是如何启动的" class="headerlink" title="五，监控系统事件的InputManager是如何启动的?"></a>五，监控系统事件的InputManager是如何启动的?</h3><blockquote>
-<p>TODO这里只大体发一下流程，具体到里面的代码细节和逻辑会在其他博客中说明</p>
-</blockquote>
+        <h2 id="探究Android事件机制之InputManager的启动过程"><a href="#探究Android事件机制之InputManager的启动过程" class="headerlink" title="探究Android事件机制之InputManager的启动过程"></a>探究Android事件机制之InputManager的启动过程</h2><h3 id="一，监控系统事件的InputManager是如何启动的"><a href="#一，监控系统事件的InputManager是如何启动的" class="headerlink" title="一，监控系统事件的InputManager是如何启动的?"></a>一，监控系统事件的InputManager是如何启动的?</h3><p>在前文<a href=""></a>中我们大体说了一下InputManager的启动后流程，这里再次贴一下。接下来我们细细的研究这个流程中的细节。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">--&gt;SystemServer.main()</div><div class="line">--&gt;ServerThread.initAndLoop():传说中的init2():开启Android的Framework世界</div><div class="line">--&gt;通过构造创建InputManagerService</div><div class="line">--&gt;InputManagerService.nativeInit()</div><div class="line">--&gt;com_android_server_input_InputManagerService.cpp.nativeInit()</div><div class="line">--&gt;创建NativeInputManager</div><div class="line">--&gt;在NativeInputManager构造中创建InputManager</div><div class="line">--&gt;在InputManager构造中创建InputReader,InputDispatcher,并创建相应的reader和dispatcher线程</div><div class="line">--&gt;InputManagerService.start()</div><div class="line">--&gt;InputManagerService.nativeStart(<span class="keyword">int</span> mPtr);</div><div class="line">--&gt;com_android_server_input_InputManagerService.cpp.nativeStart(JNIEnv* env, jclass clazz, jint ptr)</div><div class="line">--&gt;InputManager.start()</div><div class="line">--&gt;启动InputReaderThread和InputDispatcherThread线程</div><div class="line">    --&gt;InputDispatcherThread::threadLoop()</div><div class="line">        --&gt;InputDispatcher-&gt;dispatchOnce()</div><div class="line">    --&gt;InputDispatcherThread::threadLoop()</div><div class="line">        --&gt;InputReader-&gt;loopOnce()</div></pre></td></tr></table></figure>
-<h3 id="六，一个应用程序窗口-activity-是如何接收到键盘消息的"><a href="#六，一个应用程序窗口-activity-是如何接收到键盘消息的" class="headerlink" title="六，一个应用程序窗口(activity)是如何接收到键盘消息的?"></a>六，一个应用程序窗口(activity)是如何接收到键盘消息的?</h3><blockquote>
-<p>TODO 具体到里面的代码细节和逻辑会在其他博客中说明(后续补上)</p>
-</blockquote>
+<h3 id="二，"><a href="#二，" class="headerlink" title="二，"></a>二，</h3>
       
     </div>
 
@@ -489,8 +450,8 @@ Android中,一个事件InputEvent是怎么">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/30/android-5-探究 Android  apk 安装过程/" rel="next" title="探究 Android apk 安装过程">
-                <i class="fa fa-chevron-left"></i> 探究 Android apk 安装过程
+              <a href="/2016/12/14/android-6-探究 Android 事件机制/" rel="next" title="探究 Android  的事件机制">
+                <i class="fa fa-chevron-left"></i> 探究 Android  的事件机制
               </a>
             
           </div>
@@ -546,7 +507,7 @@ Android中,一个事件InputEvent是怎么">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/12/14/android-6-探究 Android  的事件机制/" data-title="探究 Android  的事件机制" data-url="http://junshengluo.com/2016/12/14/android-6-探究 Android  的事件机制/">
+      <div class="ds-thread" data-thread-key="2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/" data-title="探究Android事件机制之InputManager的启动过程" data-url="http://junshengluo.com/2016/12/14/android-7-探究 Android 事件机制之InputManager的启动过程/">
       </div>
     
   </div>
@@ -589,7 +550,7 @@ Android中,一个事件InputEvent是怎么">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -659,7 +620,7 @@ Android中,一个事件InputEvent是怎么">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究-Android-的事件机制"><span class="nav-text">探究 Android 的事件机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，前言"><span class="nav-text">一，前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，准备工作"><span class="nav-text">二，准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-事件机制涉及到哪些类？"><span class="nav-text">2.1 事件机制涉及到哪些类？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-类作用说明"><span class="nav-text">2.2 类作用说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三，Android中的事件是什么"><span class="nav-text">三，Android中的事件是什么?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四，Android中中一个事件-InputEvent-是怎么产生的"><span class="nav-text">四，Android中中一个事件(InputEvent)是怎么产生的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五，监控系统事件的InputManager是如何启动的"><span class="nav-text">五，监控系统事件的InputManager是如何启动的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六，一个应用程序窗口-activity-是如何接收到键盘消息的"><span class="nav-text">六，一个应用程序窗口(activity)是如何接收到键盘消息的?</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#探究Android事件机制之InputManager的启动过程"><span class="nav-text">探究Android事件机制之InputManager的启动过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一，监控系统事件的InputManager是如何启动的"><span class="nav-text">一，监控系统事件的InputManager是如何启动的?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二，"><span class="nav-text">二，</span></a></li></ol></li></ol></div>
             
 
           </div>
